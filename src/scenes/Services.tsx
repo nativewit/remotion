@@ -32,6 +32,11 @@ export const Services: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  /* ── Scene fade-in ──────────────────────────────────────── */
+  const sceneFade = interpolate(frame, [0, 10], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+
   /* ── Header ──────────────────────────────────────────────── */
   const headerProgress = spring({ frame, fps, config: { damping: 100 } });
   const headerY = interpolate(headerProgress, [0, 1], [30, 0]);
@@ -42,6 +47,13 @@ export const Services: React.FC = () => {
     config: { damping: 120 },
   });
 
+  /* ── Card delays synced with VO mentions ─────────────────
+   *   00:39 → frame 30  — "Product engineering"
+   *   00:46 → frame 240 — "AI integration"
+   *   00:53 → frame 450 — "CTO as a service"
+   * ───────────────────────────────────────────────────────── */
+  const CARD_DELAYS = [45, 240, 450];
+
   return (
     <AbsoluteFill
       style={{
@@ -50,6 +62,7 @@ export const Services: React.FC = () => {
         padding: "80px 100px",
         display: "flex",
         flexDirection: "column",
+        opacity: sceneFade,
       }}
     >
       {/* Section label */}
@@ -90,13 +103,19 @@ export const Services: React.FC = () => {
         }}
       >
         {SERVICES.map((svc, i) => {
-          const delay = 18 + i * 12;
+          const delay = CARD_DELAYS[i];
           const cardProgress = spring({
             frame: frame - delay,
             fps,
-            config: { damping: 100 },
+            config: { damping: 80 },
           });
           const cardY = interpolate(cardProgress, [0, 1], [30, 0]);
+          const cardScale = interpolate(cardProgress, [0, 1], [0.95, 1]);
+
+          // Active card glow — card is "active" when VO discusses it
+          const nextDelay = CARD_DELAYS[i + 1] ?? 750;
+          const isActive = frame >= delay && frame < nextDelay;
+          const glowOpacity = isActive ? 0.15 : 0;
 
           return (
             <div
@@ -106,13 +125,17 @@ export const Services: React.FC = () => {
                 background: theme.colors.surface,
                 borderRadius: 16,
                 padding: "36px 32px",
-                border: `1px solid ${theme.colors.border}`,
+                border: `1px solid ${isActive ? theme.colors.accent + "66" : theme.colors.border}`,
                 opacity: cardProgress,
-                transform: `translateY(${cardY}px)`,
+                transform: `translateY(${cardY}px) scale(${cardScale})`,
                 display: "flex",
                 flexDirection: "column",
                 position: "relative",
                 overflow: "hidden",
+                boxShadow: isActive
+                  ? `0 0 40px ${theme.colors.accent}${Math.round(glowOpacity * 255).toString(16).padStart(2, "0")}`
+                  : "none",
+                transition: "border 0.3s, box-shadow 0.3s",
               }}
             >
               {/* Top accent line */}

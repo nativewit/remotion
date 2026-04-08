@@ -2,19 +2,19 @@ import { Composition } from "remotion";
 import {
   NativewitIntro,
   TOTAL_DURATION,
+  SCENE_DURATIONS,
 } from "./compositions/NativewitIntro";
-import { BrandIntro } from "./scenes/BrandIntro";
-import { HeroStatement } from "./scenes/HeroStatement";
-import { Services } from "./scenes/Services";
-import { Stats } from "./scenes/Stats";
-import { Process } from "./scenes/Process";
-import { Outro } from "./scenes/Outro";
-import { SCENE_DURATIONS } from "./compositions/NativewitIntro";
+import { Hook } from "./scenes/Hook";
+import { Problem } from "./scenes/Problem";
+import { Authority } from "./scenes/Authority";
+import { Proof } from "./scenes/Proof";
+import { Differentiator } from "./scenes/Differentiator";
+import { CTA } from "./scenes/CTA";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* ── Full intro video ───────────────────────────────────── */}
+      {/* ── Full intro video (~1:20) ───────────────────────────── */}
       <Composition
         id="NativewitIntro"
         component={NativewitIntro}
@@ -26,49 +26,49 @@ export const RemotionRoot: React.FC = () => {
 
       {/* ── Individual scenes (for preview / iteration) ────────── */}
       <Composition
-        id="BrandIntro"
-        component={BrandIntro}
-        durationInFrames={SCENE_DURATIONS.brandIntro}
+        id="Hook"
+        component={Hook}
+        durationInFrames={SCENE_DURATIONS.hook}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="HeroStatement"
-        component={HeroStatement}
-        durationInFrames={SCENE_DURATIONS.heroStatement}
+        id="Problem"
+        component={Problem}
+        durationInFrames={SCENE_DURATIONS.problem}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="Services"
-        component={Services}
-        durationInFrames={SCENE_DURATIONS.services}
+        id="Authority"
+        component={Authority}
+        durationInFrames={SCENE_DURATIONS.authority}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="Stats"
-        component={Stats}
-        durationInFrames={SCENE_DURATIONS.stats}
+        id="Proof"
+        component={Proof}
+        durationInFrames={SCENE_DURATIONS.proof}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="Process"
-        component={Process}
-        durationInFrames={SCENE_DURATIONS.process}
+        id="Differentiator"
+        component={Differentiator}
+        durationInFrames={SCENE_DURATIONS.differentiator}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="Outro"
-        component={Outro}
-        durationInFrames={SCENE_DURATIONS.outro}
+        id="CTA"
+        component={CTA}
+        durationInFrames={SCENE_DURATIONS.cta}
         fps={30}
         width={1920}
         height={1080}

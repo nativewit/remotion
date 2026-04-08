@@ -9,7 +9,7 @@ import { theme } from "../theme";
 
 const STEPS = [
   { num: "01", title: "Discover", body: "We dig into your business goals, user needs, and technical constraints. Real conversations about what success looks like." },
-  { num: "02", title: "Architect", body: "System architecture, data models, and API contracts — before writing a line of code. This is where most agencies cut corners." },
+  { num: "02", title: "Architect", body: "System architecture, data models, and API contracts — designed before writing a single line of code." },
   { num: "03", title: "Build", body: "Iterative 2-week sprints. You see working software every cycle, not a big reveal at the end." },
   { num: "04", title: "Launch & Scale", body: "App Store submissions, production monitoring, and post-launch optimization. The relationship doesn't end at deployment." },
 ];
@@ -18,6 +18,12 @@ export const Process: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  /* ── Scene fade-in ────────────────────────────────────── */
+  const sceneFade = interpolate(frame, [0, 10], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+
+  /* ── VO 01:24–01:29 · frames 0–150 — "Discover, architect, build, Launch" */
   const labelProgress = spring({ frame, fps, config: { damping: 120 } });
   const headProgress = spring({ frame: frame - 5, fps, config: { damping: 100 } });
   const headY = interpolate(headProgress, [0, 1], [24, 0]);
@@ -30,6 +36,7 @@ export const Process: React.FC = () => {
         padding: "80px 100px",
         display: "flex",
         flexDirection: "column",
+        opacity: sceneFade,
       }}
     >
       {/* Section label */}
@@ -64,7 +71,7 @@ export const Process: React.FC = () => {
       {/* Steps */}
       <div style={{ display: "flex", gap: 24, flex: 1, alignItems: "flex-start" }}>
         {STEPS.map((step, i) => {
-          const delay = 16 + i * 12;
+          const delay = 15 + i * 30;
           const stepProgress = spring({
             frame: frame - delay,
             fps,

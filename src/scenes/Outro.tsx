@@ -11,7 +11,13 @@ export const Outro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  /* ── Scene fade-in ────────────────────────────────────── */
+  const sceneFade = interpolate(frame, [0, 10], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+
   const headProgress = spring({ frame, fps, config: { damping: 80 } });
+  const headScale = interpolate(headProgress, [0, 1], [0.9, 1]);
   const headY = interpolate(headProgress, [0, 1], [30, 0]);
 
   const subProgress = spring({
@@ -26,7 +32,14 @@ export const Outro: React.FC = () => {
     fps,
     config: { damping: 80, mass: 0.6 },
   });
-  const ctaScale = interpolate(ctaProgress, [0, 1], [0.9, 1]);
+  const emailX = interpolate(ctaProgress, [0, 1], [-40, 0]);
+
+  const phoneProgress = spring({
+    frame: frame - 40,
+    fps,
+    config: { damping: 80, mass: 0.6 },
+  });
+  const phoneX = interpolate(phoneProgress, [0, 1], [40, 0]);
 
   const footerProgress = spring({
     frame: frame - 45,
@@ -43,6 +56,7 @@ export const Outro: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        opacity: sceneFade,
       }}
     >
       {/* Top glow */}
@@ -68,14 +82,14 @@ export const Outro: React.FC = () => {
           margin: 0,
           textAlign: "center",
           opacity: headProgress,
-          transform: `translateY(${headY}px)`,
+          transform: `translateY(${headY}px) scale(${headScale})`,
           lineHeight: 1.2,
           letterSpacing: "-1.5px",
         }}
       >
-        Ready to build your
+        Let's talk about
         <br />
-        <span style={{ color: theme.colors.accent }}>next product?</span>
+        <span style={{ color: theme.colors.accent }}>what you're building.</span>
       </h1>
 
       {/* Sub text */}
@@ -91,34 +105,58 @@ export const Outro: React.FC = () => {
           lineHeight: 1.6,
         }}
       >
-        No pitch decks, no sales scripts — just a real conversation about your
-        product.
+        No pitch decks. No sales scripts. Just a real conversation
+        about your product.
       </p>
 
-      {/* CTA button */}
       <div
         style={{
-          marginTop: 40,
-          opacity: ctaProgress,
-          transform: `scale(${ctaScale})`,
+          marginTop: 48,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 16,
         }}
       >
         <div
           style={{
-            background: theme.colors.accent,
-            color: "#fff",
-            fontSize: 18,
-            fontWeight: 700,
+            background: theme.colors.surface,
+            border: `1px solid ${theme.colors.border}`,
+            borderRadius: 12,
             padding: "16px 40px",
-            borderRadius: 10,
-            letterSpacing: 0.5,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            opacity: ctaProgress,
+            transform: `translateX(${emailX}px)`,
           }}
         >
-          Book a strategy call
+          <span style={{ fontSize: 20, color: theme.colors.accent, fontWeight: 700 }}>✉</span>
+          <span style={{ fontSize: 20, color: theme.colors.textPrimary, fontWeight: 600 }}>
+            hello@nativewit.in
+          </span>
+        </div>
+        <div
+          style={{
+            background: theme.colors.surface,
+            border: `1px solid ${theme.colors.border}`,
+            borderRadius: 12,
+            padding: "14px 40px",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            opacity: phoneProgress,
+            transform: `translateX(${phoneX}px)`,
+          }}
+        >
+          <span style={{ fontSize: 18, color: theme.colors.accent, fontWeight: 700 }}>☎</span>
+          <span style={{ fontSize: 18, color: theme.colors.textPrimary, fontWeight: 600 }}>
+            +91 99443 96311
+          </span>
         </div>
       </div>
 
-      {/* Contact + footer */}
+      {/* Website footer */}
       <div
         style={{
           position: "absolute",
@@ -130,16 +168,7 @@ export const Outro: React.FC = () => {
           opacity: footerProgress,
         }}
       >
-        <span
-          style={{
-            fontSize: 16,
-            color: theme.colors.textSecondary,
-            fontWeight: 500,
-          }}
-        >
-          hello@nativewit.in
-        </span>
-        <span style={{ fontSize: 14, color: theme.colors.textMuted }}>
+        <span style={{ fontSize: 16, color: theme.colors.textSecondary, fontWeight: 500 }}>
           nativewit.in
         </span>
       </div>

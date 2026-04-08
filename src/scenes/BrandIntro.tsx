@@ -110,7 +110,7 @@ export const BrandIntro: React.FC = () => {
           textTransform: "uppercase",
         }}
       >
-        Flutter-first product studio
+        Product Engineering Studio
       </p>
     </AbsoluteFill>
   );
