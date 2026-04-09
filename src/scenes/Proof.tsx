@@ -9,31 +9,15 @@ import {
 import { theme } from "../theme";
 
 /**
- * PROOF — 33–48s (450 frames)
- * Product montage — categories + cross-domain tagline.
+ * PROOF — 29.5–44s (435 frames)
+ * Animated infographic cards for each product category.
+ * VO: AI video tools, mental health platforms, fintech, shipped in weeks.
  */
 
-const PRODUCTS = [
-  {
-    category: "Payments",
-    description: "Payment flows that handle scale.",
-    color: theme.colors.blue,
-  },
-  {
-    category: "Clinical",
-    description: "Clinical tools that work offline.",
-    color: theme.colors.green,
-  },
-  {
-    category: "Video",
-    description: "AI-powered video production platforms.",
-    color: "#8b5cf6",
-  },
-  {
-    category: "Marketplaces",
-    description: "Marketplace platforms across industries.",
-    color: theme.colors.accentSoft,
-  },
+const CATEGORIES = [
+  { label: "Video & AI", color: "#8b5cf6", delay: 0 },
+  { label: "Health", color: theme.colors.green, delay: 84 },
+  { label: "Fintech", color: theme.colors.blue, delay: 185 },
 ];
 
 export const Proof: React.FC = () => {
@@ -41,109 +25,101 @@ export const Proof: React.FC = () => {
   const { fps } = useVideoConfig();
 
   /* ── Scene transitions ──────────────────────────────────── */
-  const entryFade = interpolate(frame, [0, 12], [0, 1], {
+  const entryFade = interpolate(frame, [0, 15], [0, 1], {
     extrapolateRight: "clamp",
   });
-  const exitFade = interpolate(frame, [420, 450], [1, 0], {
+  const exitFade = interpolate(frame, [405, 435], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  /* ── Header ─────────────────────────────────────────────── */
-  const headReveal = interpolate(frame, [10, 50], [0, 100], {
+  /* ── "Shipped in weeks" calendar animation (frame 339) ─── */
+  const calendarProgress = spring({
+    frame: frame - 339,
+    fps,
+    config: { damping: 80, mass: 0.5 },
+  });
+
+  /* ── Speed arrows for "weeks not months" ────────────────── */
+  const arrowProgress = interpolate(frame, [350, 400], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.19, 1, 0.22, 1),
   });
-
-  /* ── Bottom tagline ─────────────────────────────────────── */
-  const taglineProgress = spring({
-    frame: frame - 323,
-    fps,
-    config: { damping: 100 },
-  });
-  const taglineY = interpolate(taglineProgress, [0, 1], [16, 0]);
 
   return (
     <AbsoluteFill
       style={{
         background: theme.colors.bg,
         fontFamily: theme.font,
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
         opacity: Math.min(entryFade, exitFade),
+        overflow: "hidden",
       }}
     >
-      {/* Section heading */}
-      <h2
+      {/* Section label */}
+      <span
         style={{
-          fontSize: 48,
-          fontWeight: 800,
-          color: theme.colors.textPrimary,
-          margin: "0 0 12px",
-          letterSpacing: "-1.5px",
-          clipPath: `inset(0 ${100 - headReveal}% 0 0)`,
-        }}
-      >
-        What we've shipped.
-      </h2>
-      <p
-        style={{
-          fontSize: 18,
-          color: theme.colors.textMuted,
-          margin: "0 0 56px",
-          opacity: interpolate(frame, [40, 70], [0, 1], {
+          position: "absolute",
+          top: 60,
+          left: 120,
+          fontSize: 12,
+          fontWeight: 700,
+          color: theme.colors.accent,
+          letterSpacing: 3,
+          textTransform: "uppercase",
+          opacity: interpolate(frame, [5, 25], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
           }),
         }}
       >
-        Real products. Real scale. Real users.
-      </p>
+        What we've shipped
+      </span>
 
-      {/* Product cards — montage grid */}
+      {/* ─── 3 category cards in a row ────────────────────── */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 24,
-          flex: 1,
+          position: "absolute",
+          top: "14%",
+          left: 120,
+          right: 120,
+          display: "flex",
+          gap: 28,
+          height: "48%",
         }}
       >
-        {PRODUCTS.map((product, i) => {
-          const cardDelays = [15, 61, 142, 227];
-          const delay = cardDelays[i];
+        {CATEGORIES.map((cat, i) => {
           const cardProgress = spring({
-            frame: frame - delay,
+            frame: frame - cat.delay,
             fps,
             config: { damping: 80, mass: 0.5 },
           });
-          const cardScale = interpolate(cardProgress, [0, 1], [0.9, 1]);
-          const cardY = interpolate(cardProgress, [0, 1], [24, 0]);
+          const cardY = interpolate(cardProgress, [0, 1], [30, 0]);
 
           /* Active glow while VO discusses this category */
-          const nextDelay = cardDelays[i + 1] ?? 450;
-          const isActive = frame >= delay && frame < nextDelay + 40;
+          const nextDelay = CATEGORIES[i + 1]?.delay ?? 339;
+          const isActive = frame >= cat.delay && frame < nextDelay;
 
           return (
             <div
-              key={product.category}
+              key={cat.label}
               style={{
+                flex: 1,
                 background: theme.colors.surface,
-                borderRadius: 16,
-                padding: "32px 36px",
-                border: `1px solid ${isActive ? product.color + "55" : theme.colors.border}`,
+                borderRadius: 20,
+                border: `1px solid ${isActive ? cat.color + "55" : theme.colors.border}`,
                 opacity: cardProgress,
-                transform: `translateY(${cardY}px) scale(${cardScale})`,
+                transform: `translateY(${cardY}px)`,
                 display: "flex",
                 flexDirection: "column",
+                alignItems: "center",
                 justifyContent: "center",
+                gap: 20,
                 position: "relative",
                 overflow: "hidden",
               }}
             >
-              {/* Top accent */}
+              {/* Top accent bar */}
               <div
                 style={{
                   position: "absolute",
@@ -151,59 +127,263 @@ export const Proof: React.FC = () => {
                   left: 0,
                   width: `${interpolate(cardProgress, [0, 1], [0, 100])}%`,
                   height: 3,
-                  background: product.color,
-                  borderRadius: "16px 16px 0 0",
+                  background: cat.color,
+                  borderRadius: "20px 20px 0 0",
                 }}
               />
 
-              {/* Category badge */}
+              {/* Active glow background */}
+              {isActive && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `radial-gradient(circle at 50% 50%, ${cat.color}0a 0%, transparent 70%)`,
+                  }}
+                />
+              )}
+
+              {/* Category-specific icon */}
+              {i === 0 && (
+                /* Video/AI — Play button + sparkle */
+                <div style={{ position: "relative", width: 70, height: 70 }}>
+                  {/* Play triangle */}
+                  <div
+                    style={{
+                      width: 0,
+                      height: 0,
+                      borderLeft: `30px solid ${cat.color}`,
+                      borderTop: "18px solid transparent",
+                      borderBottom: "18px solid transparent",
+                      marginLeft: 22,
+                      marginTop: 17,
+                    }}
+                  />
+                  {/* AI sparkle dots */}
+                  {[0, 1, 2].map((s) => {
+                    const sparkleAngle = ((frame * 2 + s * 120) % 360) * (Math.PI / 180);
+                    return (
+                      <div
+                        key={s}
+                        style={{
+                          position: "absolute",
+                          top: 35 + Math.sin(sparkleAngle) * 32,
+                          left: 35 + Math.cos(sparkleAngle) * 32,
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: cat.color,
+                          opacity: 0.7,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+
+              {i === 1 && (
+                /* Health — Heart + pulse line */
+                <div style={{ position: "relative", width: 80, height: 70 }}>
+                  {/* Simplified heart using two circles + rotated square */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      left: 20,
+                      width: 24,
+                      height: 24,
+                      borderRadius: "50%",
+                      background: cat.color,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      left: 36,
+                      width: 24,
+                      height: 24,
+                      borderRadius: "50%",
+                      background: cat.color,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 18,
+                      left: 24,
+                      width: 32,
+                      height: 32,
+                      background: cat.color,
+                      transform: "rotate(45deg)",
+                      borderRadius: "0 0 5px 0",
+                    }}
+                  />
+                  {/* Pulse line */}
+                  <svg
+                    style={{ position: "absolute", bottom: -5, left: 0, width: 80, height: 20 }}
+                    viewBox="0 0 80 20"
+                  >
+                    <polyline
+                      points="0,10 20,10 28,2 36,18 44,10 80,10"
+                      fill="none"
+                      stroke={cat.color}
+                      strokeWidth="2"
+                      strokeDasharray="80"
+                      strokeDashoffset={interpolate(
+                        frame - cat.delay,
+                        [0, 40],
+                        [80, 0],
+                        { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                      )}
+                    />
+                  </svg>
+                </div>
+              )}
+
+              {i === 2 && (
+                /* Fintech — Bar chart */
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    gap: 8,
+                    height: 60,
+                  }}
+                >
+                  {[0.4, 0.65, 0.9, 0.55, 1].map((h, j) => {
+                    const barH = interpolate(
+                      frame - cat.delay,
+                      [j * 8, j * 8 + 25],
+                      [0, h * 60],
+                      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                    );
+                    return (
+                      <div
+                        key={j}
+                        style={{
+                          width: 12,
+                          height: barH,
+                          background:
+                            j === 4
+                              ? cat.color
+                              : `${cat.color}88`,
+                          borderRadius: "3px 3px 0 0",
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Category label */}
               <span
                 style={{
-                  fontSize: 12,
+                  fontSize: 15,
                   fontWeight: 700,
-                  color: product.color,
+                  color: cat.color,
                   letterSpacing: 2,
                   textTransform: "uppercase",
-                  marginBottom: 12,
                 }}
               >
-                {product.category}
+                {cat.label}
               </span>
-
-              {/* Description */}
-              <p
-                style={{
-                  fontSize: 26,
-                  fontWeight: 700,
-                  color: theme.colors.textPrimary,
-                  margin: 0,
-                  lineHeight: 1.3,
-                }}
-              >
-                {product.description}
-              </p>
             </div>
           );
         })}
       </div>
 
-      {/* Cross-domain tagline */}
-      <p
+      {/* ─── "Shipped in weeks" block ─────────────────────── */}
+      <div
         style={{
-          fontSize: 22,
-          color: theme.colors.textSecondary,
-          margin: "36px 0 0",
-          opacity: taglineProgress,
-          transform: `translateY(${taglineY}px)`,
-          textAlign: "center",
+          position: "absolute",
+          bottom: "14%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: 24,
+          opacity: calendarProgress,
         }}
       >
-        We bring{" "}
-        <span style={{ color: theme.colors.accent, fontWeight: 700 }}>
-          cross-domain pattern recognition
-        </span>{" "}
-        to every engagement.
-      </p>
+        {/* Calendar icon */}
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 8,
+            border: `2px solid ${theme.colors.accent}`,
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Calendar header */}
+          <div
+            style={{
+              height: 12,
+              background: theme.colors.accent,
+            }}
+          />
+          {/* Grid dots */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 3,
+              padding: 4,
+            }}
+          >
+            {[0, 1, 2, 3, 4, 5].map((d) => (
+              <div
+                key={d}
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 1,
+                  background: d < 2 ? theme.colors.accent : theme.colors.textMuted,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Fast-forward arrows */}
+        <div style={{ display: "flex", gap: 4 }}>
+          {[0, 1, 2].map((a) => {
+            const arrowOpacity = interpolate(
+              arrowProgress,
+              [a * 0.2, a * 0.2 + 0.4],
+              [0, 1],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+            );
+            return (
+              <div
+                key={a}
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: `12px solid ${theme.colors.accent}`,
+                  borderTop: "8px solid transparent",
+                  borderBottom: "8px solid transparent",
+                  opacity: arrowOpacity,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <span
+          style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: theme.colors.textMuted,
+            letterSpacing: 2.5,
+            textTransform: "uppercase",
+          }}
+        >
+          Weeks, not months
+        </span>
+      </div>
     </AbsoluteFill>
   );
 };

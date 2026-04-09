@@ -12,21 +12,21 @@ import { CTA } from "../scenes/CTA";
  *   Scene              Frames   Seconds   VO span
  *   ────────────────   ──────   ───────   ────────
  *   Hook                 150       5.0   00:00–00:05
- *   Problem              300      10.0   00:05–00:15
- *   Authority            540      18.0   00:15–00:33
- *   Proof                450      15.0   00:33–00:48
- *   Differentiator       570      19.0   00:48–01:07
- *   CTA                  390      13.0   01:07–01:20
+ *   Problem              345      11.5   00:05–00:16.5
+ *   Authority            390      13.0   00:16.5–00:29.5
+ *   Proof                435      14.5   00:29.5–00:44
+ *   Differentiator       645      21.5   00:44–01:05.5
+ *   CTA                  375      12.5   01:05.5–01:18
  *                       ────     ─────
- *   Total               2400      80.0   (~1:20)
+ *   Total               2340      78.0   (~1:18)
  */
 export const SCENE_DURATIONS = {
   hook: 150,
-  problem: 300,
-  authority: 540,
-  proof: 450,
-  differentiator: 570,
-  cta: 390,
+  problem: 345,
+  authority: 390,
+  proof: 435,
+  differentiator: 645,
+  cta: 375,
 } as const;
 
 export const TOTAL_DURATION = Object.values(SCENE_DURATIONS).reduce(

@@ -11,7 +11,7 @@ import {
 import { theme } from "../theme";
 
 /**
- * CTA — 67–80s (390 frames)
+ * CTA — 65.5–78s (375 frames)
  * Clean close. Logo + one line + URL.
  */
 
@@ -33,7 +33,7 @@ export const CTA: React.FC = () => {
   const logoScale = interpolate(logoProgress, [0, 1], [0.6, 1]);
 
   /* ── Main line ──────────────────────────────────────────── */
-  const lineReveal = interpolate(frame, [19, 65], [0, 100], {
+  const lineReveal = interpolate(frame, [13, 60], [0, 100], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.19, 1, 0.22, 1),
@@ -41,7 +41,7 @@ export const CTA: React.FC = () => {
 
   /* ── URL ────────────────────────────────────────────────── */
   const urlProgress = spring({
-    frame: frame - 146,
+    frame: frame - 100,
     fps,
     config: { damping: 100 },
   });
@@ -50,7 +50,7 @@ export const CTA: React.FC = () => {
   /* ── Ambient glow pulse ─────────────────────────────────── */
   const glowPulse = interpolate(
     frame,
-    [0, 130, 260, 390],
+    [0, 125, 250, 375],
     [0.1, 0.25, 0.15, 0.2],
   );
 
@@ -93,7 +93,7 @@ export const CTA: React.FC = () => {
         />
       </div>
 
-      {/* Main CTA line */}
+      {/* Main CTA line — minimal, no VO duplication */}
       <h1
         style={{
           fontSize: 56,
@@ -107,9 +107,7 @@ export const CTA: React.FC = () => {
           clipPath: `inset(0 ${100 - lineReveal}% 0 0)`,
         }}
       >
-        If you're building something that matters —
-        <br />
-        <span style={{ color: theme.colors.accent }}>let's talk.</span>
+        <span style={{ color: theme.colors.accent }}>Let's talk.</span>
       </h1>
 
       {/* URL */}
