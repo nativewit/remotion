@@ -376,7 +376,7 @@ export const Authority: React.FC = () => {
         </div>
       </div>
 
-      {/* ─── World map dots ───────────────────────────────── */}
+      {/* ─── World map region circles with orbital animation ──── */}
       <div
         style={{
           position: "absolute",
@@ -384,161 +384,187 @@ export const Authority: React.FC = () => {
           opacity: mapOpacity,
         }}
       >
-        {/* Simplified continent outlines — faint rectangles */}
+        {/* Large orbital ring */}
         <div
           style={{
             position: "absolute",
-            top: "30%",
-            left: "10%",
-            width: "22%",
-            height: "35%",
-            borderRadius: 8,
-            border: `1px solid ${theme.colors.border}`,
-            opacity: 0.3,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 420,
+            height: 420,
+            borderRadius: "50%",
+            border: `2px solid ${theme.colors.border}`,
+            opacity: interpolate(frame, [275, 295], [0, 0.3], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
           }}
         />
+        {/* Inner ring */}
         <div
           style={{
             position: "absolute",
-            top: "25%",
-            left: "60%",
-            width: "30%",
-            height: "50%",
-            borderRadius: 8,
-            border: `1px solid ${theme.colors.border}`,
-            opacity: 0.3,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 280,
+            height: 280,
+            borderRadius: "50%",
+            border: `1px solid ${theme.colors.accent}22`,
+            opacity: interpolate(frame, [280, 300], [0, 0.2], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
           }}
         />
 
-        {/* Glowing location dots */}
-        {MAP_DOTS.map((dot) => {
-          const dotProgress = spring({
-            frame: frame - dot.delay,
-            fps,
-            config: { damping: 60, mass: 0.4 },
+        {/* Rotating region circles on orbital path */}
+        {MAP_DOTS.map((dot, i) => {
+          const dotProgress = interpolate(frame - dot.delay, [0, 20], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+            easing: Easing.bezier(0.19, 1, 0.22, 1),
           });
-          const dotScale = interpolate(dotProgress, [0, 1], [0, 1]);
-          const ringPulse = frame > dot.delay + 15
-            ? 1 + Math.sin((frame - dot.delay) * 0.15) * 0.3
-            : 0;
+
+          /* Orbital animation — each region orbits around the ring */
+          const baseAngle = [0, 120, 240][i]; /* 120° apart */
+          const orbitAngle = baseAngle + (frame - dot.delay) * 0.35;
+          const orbitRad = (orbitAngle * Math.PI) / 180;
+          const orbitRadius = 190;
+          const cx = 960 + Math.cos(orbitRad) * orbitRadius;
+          const cy = 540 + Math.sin(orbitRad) * orbitRadius;
 
           return (
-            <div
-              key={dot.label}
-              style={{
-                position: "absolute",
-                top: `${dot.top}%`,
-                left: `${dot.left}%`,
-                transform: `translate(-50%, -50%) scale(${dotScale})`,
-              }}
-            >
-              {/* Pulse ring */}
+            <div key={dot.label}>
+              {/* Region circle — orbiting */}
               <div
                 style={{
                   position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: `translate(-50%, -50%) scale(${ringPulse})`,
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: `1px solid ${theme.colors.accent}44`,
-                  opacity: dotProgress,
-                }}
-              />
-              {/* Core dot */}
-              <div
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: "50%",
-                  background: theme.colors.accent,
-                  boxShadow: `0 0 16px 4px ${theme.colors.accent}55`,
-                }}
-              />
-              {/* Label */}
-              <span
-                style={{
-                  position: "absolute",
-                  top: 18,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: theme.colors.textMuted,
-                  letterSpacing: 2,
-                  textTransform: "uppercase",
-                  whiteSpace: "nowrap",
+                  left: cx,
+                  top: cy,
+                  transform: `translate(-50%, -50%) scale(${interpolate(dotProgress, [0, 1], [0.3, 1])})`,
                   opacity: dotProgress,
                 }}
               >
-                {dot.label}
-              </span>
+                {/* Outer glow ring */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 80 + breathe * 6,
+                    height: 80 + breathe * 6,
+                    borderRadius: "50%",
+                    border: `2px solid ${theme.colors.accent}44`,
+                    opacity: 0.4 + breathe * 0.2,
+                  }}
+                />
+                {/* Main circle */}
+                <div
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    background: `radial-gradient(circle at 40% 40%, ${theme.colors.accent}55, ${theme.colors.accent}22)`,
+                    border: `2px solid ${theme.colors.accent}88`,
+                    boxShadow: `0 0 24px ${theme.colors.accent}33`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 900,
+                      color: theme.colors.textPrimary,
+                      letterSpacing: 1.5,
+                    }}
+                  >
+                    {dot.label}
+                  </span>
+                </div>
+              </div>
+
+              {/* Connection arc to center */}
+              {dotProgress > 0.5 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 960,
+                    top: 540,
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: theme.colors.accent,
+                    opacity: 0.3,
+                    transform: `translate(${(cx - 960) * 0.5 - 3}px, ${(cy - 540) * 0.5 - 3}px)`,
+                  }}
+                />
+              )}
             </div>
           );
         })}
 
-        {/* Connection arc lines between dots */}
-        <svg
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
+        {/* Center globe icon */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: `translate(-50%, -50%) scale(${interpolate(frame, [285, 305], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.bezier(0.19, 1, 0.22, 1),
+            })})`,
+          }}
         >
-          {/* US → Asia arc */}
-          <path
-            d="M 18 38 Q 45 20 72 42"
-            fill="none"
-            stroke={theme.colors.accent}
-            strokeWidth="0.2"
-            opacity={mapOpacity * 0.5}
-            strokeDasharray="2 1.5"
-            strokeDashoffset={interpolate(frame, [281, 390], [50, 0], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            })}
-          />
-          {/* Asia → AU arc */}
-          <path
-            d="M 72 42 Q 82 55 80 72"
-            fill="none"
-            stroke={theme.colors.accent}
-            strokeWidth="0.2"
-            opacity={mapOpacity * 0.5}
-            strokeDasharray="2 1.5"
-            strokeDashoffset={interpolate(frame, [300, 390], [30, 0], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            })}
-          />
-          {/* US → AU arc */}
-          <path
-            d="M 18 38 Q 50 70 80 72"
-            fill="none"
-            stroke={theme.colors.accent}
-            strokeWidth="0.15"
-            opacity={mapOpacity * 0.3}
-            strokeDasharray="2 2"
-            strokeDashoffset={interpolate(frame, [310, 390], [80, 0], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            })}
-          />
-          {/* Traveling dot on US→Asia path */}
-          {frame > 300 && (
-            <circle
-              cx={interpolate(frame, [300, 370], [18, 72], {
-                extrapolateLeft: "clamp",
-                extrapolateRight: "clamp",
-              })}
-              cy={interpolate(frame, [300, 335, 370], [38, 24, 42], {
-                extrapolateLeft: "clamp",
-                extrapolateRight: "clamp",
-              })}
-              r="0.8"
-              fill={theme.colors.accent}
-              opacity={mapOpacity * 0.8}
-            />
-          )}
+          <svg width="50" height="50" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="22" fill="none" stroke={theme.colors.accent}
+              strokeWidth="1.5" opacity="0.4" />
+            <ellipse cx="25" cy="25" rx="10" ry="22" fill="none" stroke={theme.colors.accent}
+              strokeWidth="1" opacity="0.3" />
+            <line x1="3" y1="25" x2="47" y2="25" stroke={theme.colors.accent}
+              strokeWidth="1" opacity="0.3" />
+            <circle cx="25" cy="25" r="4" fill={theme.colors.accent} opacity="0.5" />
+          </svg>
+        </div>
+
+        {/* Connection arcs between regions (SVG) */}
+        <svg
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+        >
+          {MAP_DOTS.map((dot, i) => {
+            const nextDot = MAP_DOTS[(i + 1) % MAP_DOTS.length];
+            const dP = interpolate(frame - dot.delay, [0, 20], [0, 1], {
+              extrapolateLeft: "clamp", extrapolateRight: "clamp",
+            });
+            const nP = interpolate(frame - nextDot.delay, [0, 20], [0, 1], {
+              extrapolateLeft: "clamp", extrapolateRight: "clamp",
+            });
+
+            if (dP < 0.5 || nP < 0.5) return null;
+
+            const a1 = ([0, 120, 240][i] + (frame - dot.delay) * 0.35) * Math.PI / 180;
+            const a2 = ([0, 120, 240][(i + 1) % 3] + (frame - nextDot.delay) * 0.35) * Math.PI / 180;
+            const r = 190;
+            const x1 = 960 + Math.cos(a1) * r;
+            const y1 = 540 + Math.sin(a1) * r;
+            const x2 = 960 + Math.cos(a2) * r;
+            const y2 = 540 + Math.sin(a2) * r;
+
+            return (
+              <line key={`arc-${i}`}
+                x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={theme.colors.accent}
+                strokeWidth="1"
+                opacity="0.15"
+                strokeDasharray="6 4"
+              />
+            );
+          })}
         </svg>
       </div>
     </AbsoluteFill>

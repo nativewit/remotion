@@ -33,7 +33,7 @@ export const Hook: React.FC = () => {
   });
 
   /* ── Conveyor belt of identical app screens (7 cards) ───── */
-  const conveyorXBase = interpolate(frame, [0, 150], [180, -1400], {
+  const conveyorXBase = interpolate(frame, [0, 150], [200, -1700], {
     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
   });
 
@@ -166,13 +166,13 @@ export const Hook: React.FC = () => {
 
       {/* ── Assembly line mockups — 7 identical cards ─────── */}
       {[0, 1, 2, 3, 4, 5, 6].map((i) => {
-        const x = conveyorX + i * 300;
+        const x = conveyorX + i * 340;
         const gx = glitch * Math.sin(i * 47) * 40;
         const gy = glitch * Math.cos(i * 31) * 20;
 
         /* Per-card depth: center cards slightly larger */
         const screenCenter = 960;
-        const cardCenter = x + 130;
+        const cardCenter = x + 140;
         const distFromCenter = Math.abs(cardCenter - screenCenter);
         const depthScale = interpolate(distFromCenter, [0, 600], [1, 0.88], {
           extrapolateRight: "clamp",
@@ -200,9 +200,9 @@ export const Hook: React.FC = () => {
             style={{
               position: "absolute",
               left: x + gx,
-              top: 145 + gy + fractureY,
-              width: 240,
-              height: 430,
+              top: 100 + gy + fractureY,
+              width: 280,
+              height: 500,
               borderRadius: 18,
               background: theme.colors.surface,
               border: `1px solid ${glitch > 0.5 ? theme.colors.accent + "66" : theme.colors.border}`,
@@ -284,8 +284,8 @@ export const Hook: React.FC = () => {
             <div
               style={{
                 margin: "8px 16px",
-                height: 90,
-                borderRadius: 10,
+                height: 110,
+                borderRadius: 12,
                 background: `linear-gradient(135deg, ${theme.colors.surfaceLight}, ${theme.colors.border})`,
               }}
             />
@@ -368,17 +368,17 @@ export const Hook: React.FC = () => {
                   left: "50%",
                   transform: `translate(-50%, -50%) rotate(${STAMP_ROTATIONS[i % STAMP_ROTATIONS.length]}deg) scale(${stampScale})`,
                   border: `3px solid ${theme.colors.accent}88`,
-                  borderRadius: 6,
-                  padding: "6px 18px",
+                  borderRadius: 8,
+                  padding: "8px 24px",
                   opacity: 0.55,
                 }}
               >
                 <span
                   style={{
-                    fontSize: 28,
+                    fontSize: 34,
                     fontWeight: 900,
                     color: theme.colors.accent,
-                    letterSpacing: 6,
+                    letterSpacing: 7,
                     textTransform: "uppercase",
                   }}
                 >

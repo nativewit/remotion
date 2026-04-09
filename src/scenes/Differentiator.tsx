@@ -153,6 +153,62 @@ export const Differentiator: React.FC = () => {
           opacity: phase1,
         }}
       >
+        {/* "What makes us different" title — appears first */}
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 28,
+            opacity: interpolate(frame, [0, 15, 50, 70], [0, 1, 1, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+          }}
+        >
+          <svg width="90" height="90" viewBox="0 0 90 90"
+            style={{
+              transform: `rotate(${frame * 0.5}deg) scale(${1 + breathe * 0.04})`,
+              filter: `drop-shadow(0 0 16px ${theme.colors.accent}44)`,
+            }}
+          >
+            <polygon points="45,2 58,32 88,45 58,58 45,88 32,58 2,45 32,32"
+              fill="none" stroke={theme.colors.accent} strokeWidth="2.5" />
+            <polygon points="45,14 54,34 74,45 54,56 45,76 36,56 16,45 36,34"
+              fill={`${theme.colors.accent}33`} />
+            <circle cx="45" cy="45" r="8" fill={theme.colors.accent} opacity="0.7" />
+          </svg>
+          <span
+            style={{
+              fontSize: 32,
+              fontWeight: 900,
+              color: theme.colors.accent,
+              letterSpacing: 4,
+              textTransform: "uppercase",
+            }}
+          >
+            What makes us different
+          </span>
+        </div>
+
+        {/* "How we think" gear — fades in after title */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            opacity: interpolate(frame, [55, 80], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+            transform: `scale(${interpolate(frame, [55, 80], [0.85, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.bezier(0.19, 1, 0.22, 1),
+            })})`,
+          }}
+        >
         {/* Concentric ripple rings */}
         {[0, 1, 2].map((i) => {
           const rippleT = interpolate(
@@ -189,11 +245,11 @@ export const Differentiator: React.FC = () => {
           }}
         >
           <svg
-            width="150"
-            height="150"
+            width="200"
+            height="200"
             viewBox="0 0 150 150"
             style={{
-              transform: `rotate(${frame * 0.6}deg)`,
+              transform: `rotate(${frame * 0.5}deg)`,
             }}
           >
             {/* Outer gear teeth */}
@@ -323,16 +379,17 @@ export const Differentiator: React.FC = () => {
 
         <span
           style={{
-            fontSize: 24,
-            fontWeight: 800,
+            fontSize: 30,
+            fontWeight: 900,
             color: theme.colors.accent,
-            letterSpacing: 3,
+            letterSpacing: 4,
             textTransform: "uppercase",
             transform: `translateY(${breatheY}px)`,
           }}
         >
           How we think
         </span>
+        </div>
       </div>
 
       {/* ═══ PHASE 2: Blueprint wireframe ═══ */}
@@ -403,15 +460,26 @@ export const Differentiator: React.FC = () => {
           {/* Box label */}
           <text
             x="350"
-            y="55"
+            y="48"
             textAnchor="middle"
             fill={theme.colors.accent}
-            fontSize="18"
+            fontSize="14"
             fontWeight="700"
             letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.25, 0.4], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
           >
             API GATEWAY
+          </text>
+          {/* Gateway icon */}
+          <text
+            x="350"
+            y="70"
+            textAnchor="middle"
+            fill={theme.colors.accent}
+            fontSize="20"
+            opacity={interpolate(blueprintDraw, [0.3, 0.45], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          >
+            ⚡
           </text>
 
           {/* Left box: Frontend */}
@@ -429,15 +497,26 @@ export const Differentiator: React.FC = () => {
           />
           <text
             x="130"
-            y="195"
+            y="188"
             textAnchor="middle"
             fill={theme.colors.blue}
-            fontSize="18"
+            fontSize="14"
             fontWeight="700"
             letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
           >
             FRONTEND
+          </text>
+          {/* React icon */}
+          <text
+            x="130"
+            y="210"
+            textAnchor="middle"
+            fill={theme.colors.blue}
+            fontSize="20"
+            opacity={interpolate(blueprintDraw, [0.4, 0.55], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          >
+            ◇
           </text>
 
           {/* Middle box: Backend */}
@@ -455,15 +534,26 @@ export const Differentiator: React.FC = () => {
           />
           <text
             x="350"
-            y="195"
+            y="188"
             textAnchor="middle"
             fill={theme.colors.green}
-            fontSize="18"
+            fontSize="14"
             fontWeight="700"
             letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
           >
             BACKEND
+          </text>
+          {/* Server icon */}
+          <text
+            x="350"
+            y="210"
+            textAnchor="middle"
+            fill={theme.colors.green}
+            fontSize="20"
+            opacity={interpolate(blueprintDraw, [0.4, 0.55], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          >
+            ⚙
           </text>
 
           {/* Right box: Services */}
@@ -481,15 +571,26 @@ export const Differentiator: React.FC = () => {
           />
           <text
             x="570"
-            y="195"
+            y="188"
             textAnchor="middle"
             fill="#8b5cf6"
-            fontSize="18"
+            fontSize="14"
             fontWeight="700"
             letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
           >
             SERVICES
+          </text>
+          {/* Cloud icon */}
+          <text
+            x="570"
+            y="210"
+            textAnchor="middle"
+            fill="#8b5cf6"
+            fontSize="20"
+            opacity={interpolate(blueprintDraw, [0.4, 0.55], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          >
+            ☁
           </text>
 
           {/* Connecting lines with endpoint dots */}
@@ -663,181 +764,130 @@ export const Differentiator: React.FC = () => {
           opacity: phase3,
         }}
       >
-        {/* Collaboration desk / table line */}
-        <div
-          style={{
-            position: "absolute",
-            top: "52%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: interpolate(
-              interpolate(frame, [290, 315], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-              [0, 1],
-              [0, 300],
-            ),
-            height: 3,
-            background: `linear-gradient(90deg, transparent, ${theme.colors.border}, transparent)`,
-            borderRadius: 2,
-          }}
-        />
-
-        {/* Two people side by side = partnership */}
-        <div style={{ display: "flex", alignItems: "center", gap: 40, zIndex: 1 }}>
-          {/* Person 1 (you) — slides in from left */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              transform: `translateX(${interpolate(
-                interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-                [0, 1],
-                [-30, 0],
-              )}px)`,
-            }}
-          >
-            <div
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background: theme.colors.textSecondary,
-                boxShadow: `0 0 20px ${theme.colors.textSecondary}22`,
-              }}
-            />
-            <div
-              style={{
-                width: 54,
-                height: 50,
-                borderRadius: "0 0 27px 27px",
-                background: theme.colors.textSecondary,
-                marginTop: 6,
-              }}
-            />
-            <span
-              style={{
-                fontSize: 22,
-                fontWeight: 800,
-                color: theme.colors.textMuted,
-                letterSpacing: 2,
-                marginTop: 8,
-                textTransform: "uppercase",
-              }}
-            >
-              You
-            </span>
-          </div>
-
-          {/* Handshake / equals with pulse */}
-          <div
-            style={{
-              position: "relative",
-              fontSize: 48,
-              fontWeight: 800,
-              color: theme.colors.accent,
-              opacity: interpolate(frame, [296, 316], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-            }}
-          >
-            =
-            {/* Pulse ring on equals */}
-            <div
-              style={{
-                position: "absolute",
-                inset: -12,
-                borderRadius: "50%",
-                border: `1px solid ${theme.colors.accent}`,
-                opacity: 0.15 + Math.sin(frame * 0.08) * 0.1,
-              }}
-            />
-          </div>
-
-          {/* Person 2 (us) — slides in from right */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              transform: `translateX(${interpolate(
-                interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-                [0, 1],
-                [30, 0],
-              )}px)`,
-            }}
-          >
-            <div
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background: theme.colors.accent,
-                boxShadow: `0 0 20px ${theme.colors.accent}33`,
-              }}
-            />
-            <div
-              style={{
-                width: 54,
-                height: 50,
-                borderRadius: "0 0 27px 27px",
-                background: theme.colors.accent,
-                marginTop: 6,
-              }}
-            />
-            <span
-              style={{
-                fontSize: 22,
-                fontWeight: 800,
-                color: theme.colors.accent,
-                letterSpacing: 2,
-                marginTop: 8,
-                textTransform: "uppercase",
-              }}
-            >
-              Nativewit
-            </span>
-          </div>
-        </div>
-
-        {/* Speech bubble from co-founder side */}
-        {frame >= 330 && (
+        {/* Partnership Venn diagram */}
+        <div style={{ position: "relative", width: 520, height: 280, zIndex: 1 }}>
+          {/* Left circle — YOU */}
           <div
             style={{
               position: "absolute",
-              top: "24%",
-              right: "30%",
-              opacity: interpolate(frame, [330, 348], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-              transform: `scale(${interpolate(
-                interpolate(frame, [330, 348], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
+              left: 30,
+              top: 20,
+              width: 240,
+              height: 240,
+              borderRadius: "50%",
+              background: `${theme.colors.textSecondary}10`,
+              border: `3px solid ${theme.colors.textSecondary}44`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: interpolate(frame, [288, 310], [0, 1], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+                easing: Easing.bezier(0.19, 1, 0.22, 1),
+              }),
+              transform: `translateX(${interpolate(
+                interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
                 [0, 1],
-                [0.6, 1],
-              )})`,
+                [40, 0],
+              )}px)`,
             }}
           >
-            <div
+            <span
               style={{
-                padding: "10px 18px",
-                borderRadius: 12,
-                border: `1px solid ${theme.colors.accent}33`,
-                background: `${theme.colors.surface}`,
-                fontSize: 20,
-                color: theme.colors.accent,
-                fontWeight: 700,
+                fontSize: 28,
+                fontWeight: 900,
+                color: theme.colors.textSecondary,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+                marginLeft: -50,
               }}
             >
-              ?
-            </div>
-            {/* Bubble tail */}
-            <div
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: "8px solid transparent",
-                borderRight: "8px solid transparent",
-                borderTop: `8px solid ${theme.colors.surface}`,
-                marginLeft: 20,
-              }}
-            />
+              YOU
+            </span>
           </div>
-        )}
+
+          {/* Right circle — NATIVEWIT */}
+          <div
+            style={{
+              position: "absolute",
+              left: 250,
+              top: 20,
+              width: 240,
+              height: 240,
+              borderRadius: "50%",
+              background: `${theme.colors.accent}10`,
+              border: `3px solid ${theme.colors.accent}44`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: interpolate(frame, [288, 310], [0, 1], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+                easing: Easing.bezier(0.19, 1, 0.22, 1),
+              }),
+              transform: `translateX(${interpolate(
+                interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
+                [0, 1],
+                [-40, 0],
+              )}px)`,
+            }}
+          >
+            <span
+              style={{
+                fontSize: 24,
+                fontWeight: 900,
+                color: theme.colors.accent,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+                marginRight: -50,
+              }}
+            >
+              NATIVEWIT
+            </span>
+          </div>
+
+          {/* Overlap glow — synergy zone */}
+          <div
+            style={{
+              position: "absolute",
+              left: 210,
+              top: 50,
+              width: 100,
+              height: 180,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${theme.colors.accent}30, transparent)`,
+              opacity: interpolate(frame, [310, 335], [0, 1], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              }),
+            }}
+          />
+
+          {/* Synergy handshake icon in overlap */}
+          <div
+            style={{
+              position: "absolute",
+              left: 230,
+              top: 105,
+              opacity: interpolate(frame, [320, 340], [0, 1], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              }),
+              transform: `scale(${1 + breathe * 0.05})`,
+            }}
+          >
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              {/* Handshake */}
+              <path d="M8 35 L20 25 L30 30 L40 25 L52 35" fill="none"
+                stroke={theme.colors.accent} strokeWidth="3" strokeLinecap="round" />
+              <circle cx="20" cy="25" r="3" fill={theme.colors.accent} opacity="0.7" />
+              <circle cx="40" cy="25" r="3" fill={theme.colors.accent} opacity="0.7" />
+              {/* Sparkle */}
+              <circle cx="30" cy="18" r="2" fill={theme.colors.accent}
+                opacity={0.5 + Math.sin(frame * 0.15) * 0.5} />
+            </svg>
+          </div>
+        </div>
 
         {/* Question marks morphing into checkmarks with burst */}
         <div style={{ display: "flex", gap: 40, zIndex: 1 }}>
@@ -954,162 +1004,170 @@ export const Differentiator: React.FC = () => {
         </div>
       </div>
 
-      {/* ═══ PHASE 4: AI neural network ═══ */}
+      {/* ═══ PHASE 4: AI embedded in every layer — Layer stack ═══ */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          gap: 16,
           opacity: phase4,
         }}
       >
-        <svg
-          width="600"
-          height="400"
-          viewBox="0 0 600 400"
-          fill="none"
-        >
-          {/* Neural network — 3 layers of nodes */}
-          {/* Layer 1 */}
-          {[100, 200, 300].map((y) => (
-            <circle
-              key={`l1-${y}`}
-              cx="100"
-              cy={y}
-              r="14"
-              fill={`${theme.colors.blue}${Math.round(networkPulse * 100)
-                .toString(16)
-                .padStart(2, "0")}`}
-              stroke={theme.colors.blue}
-              strokeWidth="2"
-            />
-          ))}
-          {/* Layer 2 */}
-          {[80, 160, 240, 320].map((y) => (
-            <circle
-              key={`l2-${y}`}
-              cx="300"
-              cy={y}
-              r="14"
-              fill={`${theme.colors.accent}${Math.round(networkPulse * 80)
-                .toString(16)
-                .padStart(2, "0")}`}
-              stroke={theme.colors.accent}
-              strokeWidth="2"
-            />
-          ))}
-          {/* Layer 3 */}
-          {[150, 250].map((y) => (
-            <circle
-              key={`l3-${y}`}
-              cx="500"
-              cy={y}
-              r="14"
-              fill={`${theme.colors.green}${Math.round(networkPulse * 100)
-                .toString(16)
-                .padStart(2, "0")}`}
-              stroke={theme.colors.green}
-              strokeWidth="2"
-            />
-          ))}
-          {/* Connection lines L1→L2 */}
-          {[100, 200, 300].map((y1) =>
-            [80, 160, 240, 320].map((y2) => (
-              <line
-                key={`c1-${y1}-${y2}`}
-                x1="114"
-                y1={y1}
-                x2="286"
-                y2={y2}
-                stroke={theme.colors.border}
-                strokeWidth="1"
-                opacity={networkPulse * 0.5}
-              />
-            )),
-          )}
-          {/* Connection lines L2→L3 */}
-          {[80, 160, 240, 320].map((y1) =>
-            [150, 250].map((y2) => (
-              <line
-                key={`c2-${y1}-${y2}`}
-                x1="314"
-                y1={y1}
-                x2="486"
-                y2={y2}
-                stroke={theme.colors.border}
-                strokeWidth="1"
-                opacity={networkPulse * 0.5}
-              />
-            )),
-          )}
-          {/* Traveling data dots on L1→L2 connections */}
-          {frame > 495 && [100, 200, 300].map((y1) => {
-            const targetY = [80, 160, 240, 320][Math.floor((frame + y1) / 20) % 4];
-            const dotX = 114 + dataFlowT * (286 - 114);
-            const dotY = y1 + dataFlowT * (targetY - y1);
-            return (
-              <circle
-                key={`df1-${y1}`}
-                cx={dotX}
-                cy={dotY}
-                r="3"
-                fill={theme.colors.accent}
-                opacity={networkPulse * 0.7}
-              />
-            );
-          })}
-          {/* Traveling data dots on L2→L3 connections */}
-          {frame > 510 && [80, 240].map((y1) => {
-            const targetY2 = y1 < 200 ? 150 : 250;
-            const dotX2 = 314 + dataFlowT * (486 - 314);
-            const dotY2 = y1 + dataFlowT * (targetY2 - y1);
-            return (
-              <circle
-                key={`df2-${y1}`}
-                cx={dotX2}
-                cy={dotY2}
-                r="3"
-                fill={theme.colors.green}
-                opacity={networkPulse * 0.6}
-              />
-            );
-          })}
-        </svg>
+        {/* Vertical layer stack */}
+        {[
+          { label: "FRONTEND", color: theme.colors.blue, icon: "UI" },
+          { label: "BACKEND", color: theme.colors.green, icon: "API" },
+          { label: "DATA", color: "#8b5cf6", icon: "DB" },
+          { label: "INFRA", color: theme.colors.accent, icon: "OPS" },
+        ].map((layer, i) => {
+          const layerDelay = 490 + i * 12;
+          const layerProgress = interpolate(frame - layerDelay, [0, 20], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+            easing: Easing.bezier(0.19, 1, 0.22, 1),
+          });
+          const layerBreathe = Math.sin((frame + i * 15) * Math.PI / 30) * 2;
 
-        {/* "AI" badge */}
+          return (
+            <div
+              key={layer.label}
+              style={{
+                width: 560,
+                height: 70,
+                borderRadius: 16,
+                background: theme.colors.surface,
+                border: `2px solid ${layer.color}44`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 28px",
+                opacity: layerProgress,
+                transform: `translateX(${interpolate(layerProgress, [0, 1], [i % 2 === 0 ? -50 : 50, 0])}px) translateY(${layerBreathe}px)`,
+                boxShadow: `0 4px 20px ${layer.color}15`,
+              }}
+            >
+              {/* Layer icon */}
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: `${layer.color}22`,
+                    border: `2px solid ${layer.color}55`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 14,
+                    fontWeight: 900,
+                    color: layer.color,
+                    letterSpacing: 1,
+                  }}
+                >
+                  {layer.icon}
+                </div>
+                <span
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 800,
+                    color: theme.colors.textSecondary,
+                    letterSpacing: 3,
+                  }}
+                >
+                  {layer.label}
+                </span>
+              </div>
+
+              {/* AI badge embedded in each layer */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  opacity: interpolate(frame - (layerDelay + 15), [0, 15], [0, 1], {
+                    extrapolateLeft: "clamp",
+                    extrapolateRight: "clamp",
+                  }),
+                }}
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    background: layer.color,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 16,
+                    fontWeight: 900,
+                    color: theme.colors.bg,
+                  }}
+                >
+                  AI
+                </div>
+                {/* Sparkle dots */}
+                {[0, 1, 2].map((s) => {
+                  const sparkAngle = ((frame * 3 + s * 120 + i * 45) % 360) * (Math.PI / 180);
+                  return (
+                    <div
+                      key={s}
+                      style={{
+                        width: 4,
+                        height: 4,
+                        borderRadius: "50%",
+                        background: layer.color,
+                        opacity: 0.4 + Math.sin(frame * 0.1 + s) * 0.3,
+                        transform: `translate(${Math.cos(sparkAngle) * 8}px, ${Math.sin(sparkAngle) * 8}px)`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Data flow lines between layers */}
+        {frame > 535 && [0, 1, 2].map((i) => {
+          const flowT = ((frame - 535 + i * 12) % 30) / 30;
+          return (
+            <div
+              key={`flow-${i}`}
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: `${33 + i * 9 + flowT * 6}%`,
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: theme.colors.accent,
+                opacity: interpolate(flowT, [0, 0.3, 0.7, 1], [0, 0.6, 0.6, 0]),
+                transform: "translateX(-50%)",
+              }}
+            />
+          );
+        })}
+
+        {/* Bottom label */}
         <div
           style={{
-            position: "absolute",
-            bottom: "15%",
+            marginTop: 20,
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            gap: 16,
           }}
         >
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 8,
-              background: theme.colors.accent,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 24,
-              fontWeight: 800,
-              color: theme.colors.bg,
-            }}
-          >
-            AI
-          </div>
           <span
             style={{
-              fontSize: 24,
-              fontWeight: 800,
+              fontSize: 28,
+              fontWeight: 900,
               color: theme.colors.textMuted,
-              letterSpacing: 3,
+              letterSpacing: 4,
               textTransform: "uppercase",
               transform: `translateY(${breatheY}px)`,
             }}

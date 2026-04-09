@@ -237,14 +237,14 @@ export const CTA: React.FC = () => {
       <div style={{ position: "relative", display: "inline-block" }}>
         <h1
           style={{
-            fontSize: 80,
+            fontSize: 96,
             fontWeight: 900,
             color: theme.colors.textPrimary,
             margin: 0,
             textAlign: "center",
             lineHeight: 1.25,
-            letterSpacing: "-1.5px",
-            maxWidth: 900,
+            letterSpacing: "-2px",
+            maxWidth: 1000,
             clipPath: `inset(0 ${100 - lineReveal}% 0 0)`,
             transform: `scale(${textScale}) translateY(${breatheY * 0.5}px)`,
             position: "relative",
@@ -309,14 +309,14 @@ export const CTA: React.FC = () => {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {/* Globe/site icon */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" stroke={theme.colors.accent} strokeWidth="2" />
             <ellipse cx="12" cy="12" rx="4" ry="10" stroke={theme.colors.accent} strokeWidth="1.5" />
             <line x1="2" y1="12" x2="22" y2="12" stroke={theme.colors.accent} strokeWidth="1.5" />
           </svg>
           <span
             style={{
-              fontSize: 32,
+              fontSize: 36,
               fontWeight: 800,
               color: theme.colors.textPrimary,
               letterSpacing: 1,
@@ -327,13 +327,13 @@ export const CTA: React.FC = () => {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {/* Email icon */}
-          <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+          <svg width="28" height="22" viewBox="0 0 24 20" fill="none">
             <rect x="1" y="1" width="22" height="18" rx="3" stroke={theme.colors.textMuted} strokeWidth="2" />
             <polyline points="1,1 12,11 23,1" fill="none" stroke={theme.colors.textMuted} strokeWidth="2" />
           </svg>
           <span
             style={{
-              fontSize: 26,
+              fontSize: 30,
               fontWeight: 700,
               color: theme.colors.textSecondary,
               letterSpacing: 0.5,

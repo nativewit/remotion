@@ -277,45 +277,65 @@ export const Problem: React.FC = () => {
           background: `radial-gradient(ellipse at ${orbX}% 50%, ${theme.colors.accent}0c 0%, transparent 40%)`,
         }}
       />
-      {/* ── "Founder" + "Product Lead" labels (VO sync) ──── */}
+      {/* ── "Founder" + "Product Lead" — big centered animated icons ──── */}
       {founderReveal > 0 && (
         <div
           style={{
             position: "absolute",
-            top: "22%",
-            left: "8%",
+            top: "10%",
+            left: "12%",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 12,
+            gap: 16,
             opacity: founderReveal * labelsFade,
           }}
         >
-          {/* Person icon */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div
+          {/* Large animated person SVG */}
+          <div style={{ position: "relative" }}>
+            <svg
+              width="120"
+              height="140"
+              viewBox="0 0 120 140"
               style={{
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                background: theme.colors.textSecondary,
+                transform: `scale(${1 + breathe * 0.06})`,
+                filter: `drop-shadow(0 0 20px ${theme.colors.textSecondary}44)`,
               }}
-            />
+            >
+              {/* Head */}
+              <circle cx="60" cy="35" r="26" fill={theme.colors.textSecondary} opacity="0.9" />
+              {/* Eyes */}
+              <circle cx="50" cy="32" r="3" fill={theme.colors.bg} opacity="0.6" />
+              <circle cx="70" cy="32" r="3" fill={theme.colors.bg} opacity="0.6" />
+              {/* Body */}
+              <path d="M20 110 Q20 75 60 66 Q100 75 100 110 L100 140 L20 140 Z" fill={theme.colors.textSecondary} opacity="0.8" />
+              {/* Tie accent */}
+              <path d="M55 66 L60 90 L65 66" fill={theme.colors.accent} opacity="0.7" />
+              {/* Shoulder lines */}
+              <path d="M20 110 Q20 85 45 75" fill="none" stroke={theme.colors.textSecondary} strokeWidth="2" opacity="0.4" />
+              <path d="M100 110 Q100 85 75 75" fill="none" stroke={theme.colors.textSecondary} strokeWidth="2" opacity="0.4" />
+            </svg>
+            {/* Glow ring */}
             <div
               style={{
-                width: 22,
-                height: 16,
-                borderRadius: "0 0 11px 11px",
-                background: theme.colors.textSecondary,
-                marginTop: 2,
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 160,
+                height: 160,
+                borderRadius: "50%",
+                border: `2px solid ${theme.colors.textSecondary}`,
+                opacity: 0.15 + breathe * 0.1,
               }}
             />
           </div>
           <span
             style={{
-              fontSize: 24,
-              fontWeight: 800,
+              fontSize: 26,
+              fontWeight: 900,
               color: theme.colors.textSecondary,
-              letterSpacing: 2,
+              letterSpacing: 4,
               textTransform: "uppercase",
             }}
           >
@@ -327,43 +347,59 @@ export const Problem: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "22%",
-            left: "22%",
+            top: "10%",
+            left: "55%",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 12,
+            gap: 16,
             opacity: leadReveal * labelsFade,
           }}
         >
-          {/* Briefcase icon */}
-          <div
-            style={{
-              width: 22,
-              height: 16,
-              borderRadius: 3,
-              border: `2px solid ${theme.colors.textSecondary}`,
-              position: "relative",
-            }}
-          >
+          {/* Large animated briefcase SVG */}
+          <div style={{ position: "relative" }}>
+            <svg
+              width="130"
+              height="120"
+              viewBox="0 0 130 120"
+              style={{
+                transform: `scale(${1 + breathe * 0.06})`,
+                filter: `drop-shadow(0 0 20px ${theme.colors.textSecondary}44)`,
+              }}
+            >
+              {/* Handle */}
+              <path d="M42 25 L42 15 Q42 5 52 5 L78 5 Q88 5 88 15 L88 25" fill="none" stroke={theme.colors.textSecondary} strokeWidth="4" strokeLinecap="round" />
+              {/* Main case */}
+              <rect x="10" y="25" width="110" height="75" rx="10" fill={theme.colors.textSecondary} opacity="0.85" />
+              {/* Case clasp */}
+              <rect x="55" y="50" width="20" height="14" rx="3" fill={theme.colors.bg} opacity="0.5" />
+              {/* Documents peeking out */}
+              <rect x="30" y="30" width="35" height="5" rx="2" fill={theme.colors.bg} opacity="0.25" />
+              <rect x="30" y="40" width="25" height="5" rx="2" fill={theme.colors.bg} opacity="0.2" />
+              {/* Accent stripe */}
+              <rect x="10" y="70" width="110" height="4" fill={theme.colors.accent} opacity="0.4" />
+            </svg>
+            {/* Glow ring */}
             <div
               style={{
                 position: "absolute",
-                top: -4,
-                left: 5,
-                width: 8,
-                height: 4,
-                borderRadius: "3px 3px 0 0",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 170,
+                height: 160,
+                borderRadius: "50%",
                 border: `2px solid ${theme.colors.textSecondary}`,
-                borderBottom: "none",
+                opacity: 0.15 + breathe * 0.1,
               }}
             />
           </div>
           <span
             style={{
-              fontSize: 24,
-              fontWeight: 800,
+              fontSize: 26,
+              fontWeight: 900,
               color: theme.colors.textSecondary,
-              letterSpacing: 2,
+              letterSpacing: 4,
               textTransform: "uppercase",
             }}
           >
@@ -532,44 +568,63 @@ export const Problem: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "28%",
-            left: "57%",
-            opacity: wall1,
+            top: "15%",
+            left: "52%",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 10,
+            gap: 14,
+            opacity: wall1,
           }}
         >
-          {/* Gear icon with teeth */}
-          <svg width="30" height="30" viewBox="0 0 30 30">
-            <circle cx="15" cy="15" r="10" fill="none" stroke={theme.colors.textMuted} strokeWidth="2" />
-            <circle cx="15" cy="15" r="4" fill={theme.colors.textMuted} />
-            {/* Gear teeth */}
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
-              const rad = ((a + frame * 1.5) * Math.PI) / 180;
-              return (
-                <rect
-                  key={a}
-                  x={15 + Math.cos(rad) * 11 - 2}
-                  y={15 + Math.sin(rad) * 11 - 2}
-                  width="4"
-                  height="4"
-                  rx="1"
-                  fill={theme.colors.textMuted}
-                  transform={`rotate(${a + frame * 1.5} ${15 + Math.cos(rad) * 11} ${15 + Math.sin(rad) * 11})`}
-                />
-              );
-            })}
-          </svg>
-          <span
-            style={{
-              fontSize: 24,
-              fontWeight: 800,
-              color: theme.colors.textMuted,
-              letterSpacing: 2.5,
-              textTransform: "uppercase",
-            }}
-          >
+          {/* Large animated interlocking gears */}
+          <div style={{ position: "relative", width: 130, height: 130 }}>
+            <svg width="130" height="130" viewBox="0 0 130 130"
+              style={{ filter: `drop-shadow(0 0 16px ${theme.colors.textMuted}33)` }}
+            >
+              {/* Main gear */}
+              <g style={{ transform: `rotate(${frame * 1.2}deg)`, transformOrigin: "55px 55px" }}>
+                <circle cx="55" cy="55" r="28" fill="none" stroke={theme.colors.textMuted} strokeWidth="3" />
+                <circle cx="55" cy="55" r="12" fill={theme.colors.textMuted} opacity="0.6" />
+                {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
+                  const rad = (a * Math.PI) / 180;
+                  return (
+                    <rect key={a} x={55 + Math.cos(rad) * 30 - 5} y={55 + Math.sin(rad) * 30 - 5}
+                      width="10" height="10" rx="2" fill={theme.colors.textMuted} opacity="0.7"
+                      transform={`rotate(${a} ${55 + Math.cos(rad) * 30} ${55 + Math.sin(rad) * 30})`}
+                    />
+                  );
+                })}
+              </g>
+              {/* Small gear */}
+              <g style={{ transform: `rotate(${-frame * 1.8}deg)`, transformOrigin: "100px 95px" }}>
+                <circle cx="100" cy="95" r="18" fill="none" stroke={theme.colors.accent} strokeWidth="2.5" opacity="0.7" />
+                <circle cx="100" cy="95" r="7" fill={theme.colors.accent} opacity="0.5" />
+                {[0, 60, 120, 180, 240, 300].map((a) => {
+                  const rad = (a * Math.PI) / 180;
+                  return (
+                    <rect key={a} x={100 + Math.cos(rad) * 20 - 4} y={95 + Math.sin(rad) * 20 - 4}
+                      width="8" height="8" rx="2" fill={theme.colors.accent} opacity="0.5"
+                      transform={`rotate(${a} ${100 + Math.cos(rad) * 20} ${95 + Math.sin(rad) * 20})`}
+                    />
+                  );
+                })}
+              </g>
+            </svg>
+            {/* Warning pulse ring */}
+            <div style={{
+              position: "absolute", top: "50%", left: "42%",
+              transform: "translate(-50%, -50%)",
+              width: 100 + breathe * 8, height: 100 + breathe * 8,
+              borderRadius: "50%", border: `2px solid ${theme.colors.accent}44`,
+              opacity: 0.3 + breathe * 0.15,
+            }} />
+          </div>
+          <span style={{
+            fontSize: 26, fontWeight: 900,
+            color: theme.colors.textMuted, letterSpacing: 4,
+            textTransform: "uppercase", textAlign: "center",
+          }}>
             Complexity
           </span>
         </div>
@@ -634,50 +689,48 @@ export const Problem: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "26%",
-            left: "74%",
-            opacity: wall2,
+            top: "13%",
+            left: "70%",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 10,
+            gap: 14,
+            opacity: wall2,
           }}
         >
-          {/* X icon */}
-          <div style={{ position: "relative", width: 24, height: 24 }}>
-            <div
+          {/* Large animated broken link / warning icon */}
+          <div style={{ position: "relative", width: 120, height: 120 }}>
+            <svg width="120" height="120" viewBox="0 0 120 120"
               style={{
-                position: "absolute",
-                top: "50%",
-                left: 0,
-                width: "100%",
-                height: 3,
-                background: theme.colors.accent,
-                transform: "rotate(45deg)",
-                borderRadius: 1,
+                transform: `scale(${1 + Math.sin(frame * 0.15) * 0.04})`,
+                filter: `drop-shadow(0 0 16px ${theme.colors.accent}44)`,
               }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: 0,
-                width: "100%",
-                height: 3,
-                background: theme.colors.accent,
-                transform: "rotate(-45deg)",
-                borderRadius: 1,
-              }}
-            />
+            >
+              {/* Outer warning triangle */}
+              <path d="M60 10 L110 100 L10 100 Z" fill="none" stroke={theme.colors.accent} strokeWidth="3" strokeLinejoin="round" opacity="0.6" />
+              {/* Inner warning triangle */}
+              <path d="M60 30 L95 90 L25 90 Z" fill={`${theme.colors.accent}15`} stroke={theme.colors.accent} strokeWidth="1.5" strokeLinejoin="round" opacity="0.4" />
+              {/* Exclamation mark */}
+              <rect x="56" y="45" width="8" height="28" rx="4" fill={theme.colors.accent} opacity="0.9" />
+              <circle cx="60" cy="82" r="5" fill={theme.colors.accent} opacity="0.9" />
+              {/* Crack lines */}
+              <line x1="35" y1="85" x2="20" y2="100" stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.3" />
+              <line x1="85" y1="85" x2="100" y2="100" stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.3" />
+            </svg>
+            {/* Pulsing danger ring */}
+            <div style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 110 + breathe * 10, height: 110 + breathe * 10,
+              borderRadius: "50%", border: `2px solid ${theme.colors.accent}`,
+              opacity: 0.15 + Math.sin(frame * 0.12) * 0.1,
+            }} />
           </div>
-          <span
-            style={{
-              fontSize: 24,
-              fontWeight: 800,
-              color: theme.colors.textMuted,
-              letterSpacing: 2.5,
-              textTransform: "uppercase",
-            }}
-          >
+          <span style={{
+            fontSize: 26, fontWeight: 900,
+            color: theme.colors.textMuted, letterSpacing: 4,
+            textTransform: "uppercase", textAlign: "center",
+          }}>
             Wrong partner
           </span>
         </div>
