@@ -386,6 +386,8 @@ export const Differentiator: React.FC = () => {
             textTransform: "uppercase",
             transform: `translateY(${breatheY}px)`,
             marginTop: 40,
+            width: "100%",
+            textAlign: "center",
           }}
         >
           How we think
@@ -699,7 +701,7 @@ export const Differentiator: React.FC = () => {
           />
           <text
             x="350"
-            y="330"
+            y="370"
             textAnchor="middle"
             fill={theme.colors.textMuted}
             fontSize="16"
@@ -735,21 +737,39 @@ export const Differentiator: React.FC = () => {
             );
           })()}
         </svg>
-        <span
+        <div
           style={{
             position: "absolute",
-            bottom: "12%",
-            fontSize: 24,
-            fontWeight: 800,
-            color: theme.colors.textMuted,
-            letterSpacing: 3,
-            textTransform: "uppercase",
+            bottom: "10%",
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
             opacity: phase2,
             transform: `translateY(${breatheY}px)`,
           }}
         >
-          Architecture first
-        </span>
+          {/* Blueprint icon */}
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect x="2" y="2" width="28" height="28" rx="4" fill="none"
+              stroke={theme.colors.accent} strokeWidth="2" opacity="0.6" />
+            <line x1="2" y1="12" x2="30" y2="12" stroke={theme.colors.accent}
+              strokeWidth="1.5" opacity="0.4" />
+            <line x1="12" y1="2" x2="12" y2="30" stroke={theme.colors.accent}
+              strokeWidth="1.5" opacity="0.4" />
+            <circle cx="22" cy="22" r="5" fill={theme.colors.accent} opacity="0.5" />
+          </svg>
+          <span
+            style={{
+              fontSize: 28,
+              fontWeight: 900,
+              color: theme.colors.accent,
+              letterSpacing: 4,
+              textTransform: "uppercase",
+            }}
+          >
+            Architecture first
+          </span>
+        </div>
       </div>
 
       {/* ═══ PHASE 3: Co-founder + ? → ✓ ═══ */}
@@ -1033,6 +1053,16 @@ export const Differentiator: React.FC = () => {
           });
           const layerBreathe = Math.sin((frame + i * 15) * Math.PI / 30) * 2;
 
+          /* AI badge reveal — staggered per layer */
+          const aiBadgeReveal = interpolate(frame - (layerDelay + 15), [0, 15], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          });
+
+          /* Scanning line animation across each layer */
+          const scanT = ((frame - layerDelay + i * 20) % 80) / 80;
+          const scanX = interpolate(scanT, [0, 1], [-10, 110]);
+
           return (
             <div
               key={layer.label}
@@ -1049,27 +1079,78 @@ export const Differentiator: React.FC = () => {
                 opacity: layerProgress,
                 transform: `translateX(${interpolate(layerProgress, [0, 1], [i % 2 === 0 ? -50 : 50, 0])}px) translateY(${layerBreathe}px)`,
                 boxShadow: `0 4px 20px ${layer.color}15`,
+                position: "relative",
+                overflow: "hidden",
               }}
             >
+              {/* Scanning highlight line */}
+              {aiBadgeReveal > 0.5 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: `${scanX}%`,
+                    width: 40,
+                    height: "100%",
+                    background: `linear-gradient(90deg, transparent, ${layer.color}12, transparent)`,
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
               {/* Layer icon */}
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                 <div
                   style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 10,
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
                     background: `${layer.color}22`,
                     border: `2px solid ${layer.color}55`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 14,
-                    fontWeight: 900,
-                    color: layer.color,
-                    letterSpacing: 1,
+                    position: "relative",
                   }}
                 >
-                  {layer.icon}
+                  {/* SVG icon per layer type */}
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    {i === 0 && (
+                      /* Frontend: browser window */
+                      <>
+                        <rect x="2" y="3" width="20" height="18" rx="3" fill="none" stroke={layer.color} strokeWidth="2" />
+                        <line x1="2" y1="9" x2="22" y2="9" stroke={layer.color} strokeWidth="1.5" />
+                        <circle cx="6" cy="6" r="1.5" fill={layer.color} opacity="0.6" />
+                        <circle cx="10" cy="6" r="1.5" fill={layer.color} opacity="0.6" />
+                      </>
+                    )}
+                    {i === 1 && (
+                      /* Backend: server */
+                      <>
+                        <rect x="4" y="2" width="16" height="7" rx="2" fill="none" stroke={layer.color} strokeWidth="2" />
+                        <rect x="4" y="11" width="16" height="7" rx="2" fill="none" stroke={layer.color} strokeWidth="2" />
+                        <circle cx="7" cy="5.5" r="1.5" fill={layer.color} opacity="0.7" />
+                        <circle cx="7" cy="14.5" r="1.5" fill={layer.color} opacity="0.7" />
+                        <line x1="12" y1="20" x2="12" y2="23" stroke={layer.color} strokeWidth="1.5" />
+                        <line x1="8" y1="23" x2="16" y2="23" stroke={layer.color} strokeWidth="1.5" />
+                      </>
+                    )}
+                    {i === 2 && (
+                      /* Data: database cylinder */
+                      <>
+                        <ellipse cx="12" cy="6" rx="8" ry="4" fill="none" stroke={layer.color} strokeWidth="2" />
+                        <line x1="4" y1="6" x2="4" y2="18" stroke={layer.color} strokeWidth="2" />
+                        <line x1="20" y1="6" x2="20" y2="18" stroke={layer.color} strokeWidth="2" />
+                        <ellipse cx="12" cy="18" rx="8" ry="4" fill="none" stroke={layer.color} strokeWidth="2" />
+                        <ellipse cx="12" cy="12" rx="8" ry="3" fill="none" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                      </>
+                    )}
+                    {i === 3 && (
+                      /* Infra: cloud */
+                      <>
+                        <path d="M6 18h12a5 5 0 10-2-9.8A7 7 0 104 15a4 4 0 002 3z" fill="none" stroke={layer.color} strokeWidth="2" />
+                      </>
+                    )}
+                  </svg>
                 </div>
                 <span
                   style={{
@@ -1083,86 +1164,137 @@ export const Differentiator: React.FC = () => {
                 </span>
               </div>
 
-              {/* AI badge embedded in each layer */}
+              {/* AI badge with neural network icon */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
-                  opacity: interpolate(frame - (layerDelay + 15), [0, 15], [0, 1], {
-                    extrapolateLeft: "clamp",
-                    extrapolateRight: "clamp",
-                  }),
+                  gap: 12,
+                  opacity: aiBadgeReveal,
                 }}
               >
-                <div
+                {/* Neural network mini icon */}
+                <svg width="28" height="28" viewBox="0 0 28 28"
                   style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 8,
-                    background: layer.color,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 16,
-                    fontWeight: 900,
-                    color: theme.colors.bg,
+                    transform: `scale(${1 + Math.sin((frame + i * 20) * 0.1) * 0.08})`,
                   }}
                 >
-                  AI
+                  {/* Input nodes */}
+                  <circle cx="4" cy="8" r="2.5" fill={layer.color} opacity="0.6" />
+                  <circle cx="4" cy="20" r="2.5" fill={layer.color} opacity="0.6" />
+                  {/* Hidden nodes */}
+                  <circle cx="14" cy="6" r="2.5" fill={layer.color} opacity="0.8" />
+                  <circle cx="14" cy="14" r="2.5" fill={layer.color} />
+                  <circle cx="14" cy="22" r="2.5" fill={layer.color} opacity="0.8" />
+                  {/* Output node */}
+                  <circle cx="24" cy="14" r="3" fill={layer.color} />
+                  {/* Connections */}
+                  <line x1="6.5" y1="8" x2="11.5" y2="6" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                  <line x1="6.5" y1="8" x2="11.5" y2="14" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                  <line x1="6.5" y1="20" x2="11.5" y2="14" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                  <line x1="6.5" y1="20" x2="11.5" y2="22" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                  <line x1="16.5" y1="6" x2="21.5" y2="14" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                  <line x1="16.5" y1="14" x2="21.5" y2="14" stroke={layer.color} strokeWidth="1" opacity="0.5" />
+                  <line x1="16.5" y1="22" x2="21.5" y2="14" stroke={layer.color} strokeWidth="1" opacity="0.4" />
+                </svg>
+                <div
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: 8,
+                    background: `${layer.color}22`,
+                    border: `1.5px solid ${layer.color}66`,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 900,
+                      color: layer.color,
+                      letterSpacing: 1.5,
+                    }}
+                  >
+                    AI
+                  </span>
+                  {/* Pulsing dot indicator */}
+                  <div
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: layer.color,
+                      opacity: 0.5 + Math.sin((frame + i * 15) * 0.15) * 0.5,
+                      boxShadow: `0 0 6px ${layer.color}`,
+                    }}
+                  />
                 </div>
-                {/* Sparkle dots */}
-                {[0, 1, 2].map((s) => {
-                  const sparkAngle = ((frame * 3 + s * 120 + i * 45) % 360) * (Math.PI / 180);
-                  return (
-                    <div
-                      key={s}
-                      style={{
-                        width: 4,
-                        height: 4,
-                        borderRadius: "50%",
-                        background: layer.color,
-                        opacity: 0.4 + Math.sin(frame * 0.1 + s) * 0.3,
-                        transform: `translate(${Math.cos(sparkAngle) * 8}px, ${Math.sin(sparkAngle) * 8}px)`,
-                      }}
-                    />
-                  );
-                })}
               </div>
             </div>
           );
         })}
 
-        {/* Data flow lines between layers */}
-        {frame > 535 && [0, 1, 2].map((i) => {
-          const flowT = ((frame - 535 + i * 12) % 30) / 30;
-          return (
-            <div
-              key={`flow-${i}`}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: `${33 + i * 9 + flowT * 6}%`,
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: theme.colors.accent,
-                opacity: interpolate(flowT, [0, 0.3, 0.7, 1], [0, 0.6, 0.6, 0]),
-                transform: "translateX(-50%)",
-              }}
-            />
-          );
-        })}
+        {/* Vertical energy flow between layers */}
+        {frame > 535 && (
+          <svg
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "26%",
+              transform: "translateX(-50%)",
+              width: 20,
+              height: "48%",
+              pointerEvents: "none",
+            }}
+            viewBox="0 0 20 520"
+          >
+            {/* Glowing vertical line */}
+            <line x1="10" y1="0" x2="10" y2="520" stroke={theme.colors.accent}
+              strokeWidth="1" opacity="0.1" />
+            {/* Multiple traveling dots */}
+            {[0, 1, 2, 3].map((d) => {
+              const dotT = ((frame - 535 + d * 30) % 90) / 90;
+              return (
+                <circle
+                  key={`energy-${d}`}
+                  cx="10"
+                  cy={dotT * 520}
+                  r="4"
+                  fill={theme.colors.accent}
+                  opacity={interpolate(dotT, [0, 0.15, 0.85, 1], [0, 0.7, 0.7, 0])}
+                >
+                </circle>
+              );
+            })}
+          </svg>
+        )}
 
-        {/* Bottom label */}
+        {/* Bottom label with chip icon */}
         <div
           style={{
             marginTop: 20,
             display: "flex",
             alignItems: "center",
-            gap: 16,
+            gap: 14,
           }}
         >
+          <svg width="30" height="30" viewBox="0 0 30 30"
+            style={{ transform: `translateY(${breatheY}px)` }}
+          >
+            <rect x="6" y="6" width="18" height="18" rx="3" fill="none"
+              stroke={theme.colors.accent} strokeWidth="2" opacity="0.6" />
+            <circle cx="15" cy="15" r="4" fill={theme.colors.accent} opacity="0.5" />
+            {/* Pins */}
+            {[10, 15, 20].map((p) => (
+              <g key={`pin-${p}`}>
+                <line x1={p} y1="2" x2={p} y2="6" stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.4" />
+                <line x1={p} y1="24" x2={p} y2="28" stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.4" />
+                <line x1="2" y1={p} x2="6" y2={p} stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.4" />
+                <line x1="24" y1={p} x2="28" y2={p} stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.4" />
+              </g>
+            ))}
+          </svg>
           <span
             style={{
               fontSize: 28,

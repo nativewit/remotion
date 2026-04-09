@@ -186,8 +186,8 @@ export const Authority: React.FC = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: 130,
-              height: 130,
+              width: 180,
+              height: 180,
               borderRadius: "50%",
               border: `1px solid ${theme.colors.accent}22`,
               opacity: 0.5 + Math.sin(frame * 0.08) * 0.3,
@@ -202,7 +202,7 @@ export const Authority: React.FC = () => {
           >
             <Img
               src={staticFile("logo.png")}
-              style={{ width: 90, height: "auto" }}
+              style={{ width: 130, height: "auto" }}
             />
             {/* Shimmer sweep */}
             <div
@@ -391,8 +391,8 @@ export const Authority: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 580,
-            height: 580,
+            width: 700,
+            height: 700,
             borderRadius: "50%",
             border: `2px dashed ${theme.colors.border}`,
             opacity: interpolate(frame, [275, 295], [0, 0.35], {
@@ -414,7 +414,7 @@ export const Authority: React.FC = () => {
           const baseAngle = [0, 120, 240][i]; /* 120° apart */
           const orbitAngle = baseAngle + (frame - dot.delay) * 0.35;
           const orbitRad = (orbitAngle * Math.PI) / 180;
-          const orbitRadius = 290;
+          const orbitRadius = 350;
           const cx = 960 + Math.cos(orbitRad) * orbitRadius;
           const cy = 540 + Math.sin(orbitRad) * orbitRadius;
 
@@ -510,7 +510,7 @@ export const Authority: React.FC = () => {
             if (dP < 0.5) return null;
 
             const a = ([0, 120, 240][i] + (frame - dot.delay) * 0.35) * Math.PI / 180;
-            const r = 290;
+            const r = 350;
             const ex = 960 + Math.cos(a) * r;
             const ey = 540 + Math.sin(a) * r;
 
