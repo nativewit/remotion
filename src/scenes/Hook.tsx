@@ -33,9 +33,18 @@ export const Hook: React.FC = () => {
   });
 
   /* ── Conveyor belt of identical app screens (7 cards) ───── */
-  const conveyorX = interpolate(frame, [0, 150], [180, -1400], {
+  const conveyorXBase = interpolate(frame, [0, 150], [180, -1400], {
     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
   });
+
+  /* ── Conveyor deceleration beat at "ask for." (frame 57) ── */
+  const conveyorPause = interpolate(frame, [55, 60, 68, 75], [1, 0.3, 0.3, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  /* ── Apply pause to conveyor ─────────────────────────────── */
+  const conveyorX = conveyorXBase * conveyorPause + conveyorXBase * (1 - conveyorPause) * 0.95;
 
   /* ── Factory rail beneath cards ─────────────────────────── */
   const railX = interpolate(frame, [0, 150], [0, -600]);
@@ -46,8 +55,9 @@ export const Hook: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
-  /* ── Glitch at ~frame 82 ("not what products need") ─────── */
-  const glitch = interpolate(frame, [80, 86, 92, 108], [0, 1, 0.8, 0], {
+  /* ── Glitch at ~frame 88 (synced to "That's not what great
+       products need" at frame 94 — builds in the pause) ───── */
+  const glitch = interpolate(frame, [85, 93, 100, 116], [0, 1, 0.7, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -55,23 +65,23 @@ export const Hook: React.FC = () => {
   /* ── RGB split channels during glitch ──────────────────── */
   const rgbSplit = glitch * 8;
 
-  /* ── Particle burst at peak glitch (frames 86-110) ──────── */
-  const burstProgress = interpolate(frame, [86, 115], [0, 1], {
+  /* ── Particle burst at peak glitch (frames 93-120) ──────── */
+  const burstProgress = interpolate(frame, [93, 122], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const burstOpacity = interpolate(frame, [86, 95, 115], [0, 1, 0], {
+  const burstOpacity = interpolate(frame, [93, 100, 122], [0, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
   /* ── Accent line reveals after glitch ──────────────────── */
-  const lineWidth = interpolate(frame, [95, 130], [0, 280], {
+  const lineWidth = interpolate(frame, [102, 135], [0, 280], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.19, 1, 0.22, 1),
   });
-  const lineGlow = interpolate(frame, [95, 110, 130], [0, 1, 0.6], {
+  const lineGlow = interpolate(frame, [102, 118, 135], [0, 1, 0.6], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

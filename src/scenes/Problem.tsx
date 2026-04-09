@@ -13,9 +13,13 @@ import { theme } from "../theme";
  * Visual metaphor: a racing indicator hits walls and decelerates.
  * Features: HUD dashboard, particle trail, speedometer, debris on impact.
  *
- * VO: "You're a founder or product lead trying to move fast.
- *      But complexity + wrong partner slow you down.
- *      Six months behind."
+ * VO cues (local frames):
+ *   11  "You're a founder"
+ *   50  "or a product lead"
+ *   97  "trying to move fast."
+ *  158  "Technical complexity slows you down."
+ *  252  "The wrong build partner slows you down"
+ *  304  "even more."
  */
 
 /* Debris particles generated on wall impact */
@@ -66,18 +70,36 @@ export const Problem: React.FC = () => {
   /* ── Grid track marks ──────────────────────────────────── */
   const gridScroll = interpolate(frame, [0, 345], [0, -400]);
 
-  /* ── Wall 1: Complexity — appears at ~frame 140 ─────────── */
+  /* ── Wall 1: Complexity — appears at ~frame 150
+       (VO "Technical complexity" hits at frame 158) ─────── */
   const wall1 = spring({
-    frame: frame - 140,
+    frame: frame - 150,
     fps,
     config: { damping: 80, mass: 0.5 },
   });
 
-  /* ── Wall 2: Wrong partner — appears at ~frame 235 ──────── */
+  /* ── Wall 2: Wrong partner — appears at ~frame 244
+       (VO "wrong build partner" hits at frame 252) ────── */
   const wall2 = spring({
-    frame: frame - 235,
+    frame: frame - 244,
     fps,
     config: { damping: 80, mass: 0.5 },
+  });
+
+  /* ── Founder + product lead label reveals ─────────────── */
+  const founderReveal = spring({
+    frame: frame - 11,
+    fps,
+    config: { damping: 100, mass: 0.4 },
+  });
+  const leadReveal = spring({
+    frame: frame - 50,
+    fps,
+    config: { damping: 100, mass: 0.4 },
+  });
+  const labelsFade = interpolate(frame, [85, 105], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
   });
 
   /* ── Impact shake on wall hits ──────────────────────────── */
@@ -253,7 +275,100 @@ export const Problem: React.FC = () => {
           background: `radial-gradient(ellipse at ${orbX}% 50%, ${theme.colors.accent}0c 0%, transparent 40%)`,
         }}
       />
-
+      {/* ── "Founder" + "Product Lead" labels (VO sync) ──── */}
+      {founderReveal > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "22%",
+            left: "8%",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            opacity: founderReveal * labelsFade,
+          }}
+        >
+          {/* Person icon */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                background: theme.colors.textSecondary,
+              }}
+            />
+            <div
+              style={{
+                width: 22,
+                height: 16,
+                borderRadius: "0 0 11px 11px",
+                background: theme.colors.textSecondary,
+                marginTop: 2,
+              }}
+            />
+          </div>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: theme.colors.textSecondary,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+            }}
+          >
+            Founder
+          </span>
+        </div>
+      )}
+      {leadReveal > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "22%",
+            left: "22%",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            opacity: leadReveal * labelsFade,
+          }}
+        >
+          {/* Briefcase icon */}
+          <div
+            style={{
+              width: 22,
+              height: 16,
+              borderRadius: 3,
+              border: `2px solid ${theme.colors.textSecondary}`,
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: -4,
+                left: 5,
+                width: 8,
+                height: 4,
+                borderRadius: "3px 3px 0 0",
+                border: `2px solid ${theme.colors.textSecondary}`,
+                borderBottom: "none",
+              }}
+            />
+          </div>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: theme.colors.textSecondary,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+            }}
+          >
+            Product Lead
+          </span>
+        </div>
+      )}
       {/* ── Grid track lines ─────────────────────────────── */}
       <div
         style={{

@@ -41,11 +41,13 @@ export const Differentiator: React.FC = () => {
   });
 
   /* ── Phase visibility helpers ──────────────────────────── */
-  const phase1 = interpolate(frame, [0, 30, 120, 145], [0, 1, 1, 0], {
+  /* Phase 1: "how we think" — VO ends at ~f106, extend visibility */
+  const phase1 = interpolate(frame, [0, 30, 125, 150], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const phase2 = interpolate(frame, [134, 164, 270, 300], [0, 1, 1, 0], {
+  /* Phase 2: "architecture before code" — VO at f134 */
+  const phase2 = interpolate(frame, [138, 168, 270, 300], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -59,7 +61,7 @@ export const Differentiator: React.FC = () => {
   });
 
   /* ── Blueprint line draw progress (phase 2) ────────────── */
-  const blueprintDraw = interpolate(frame, [134, 260], [0, 1], {
+  const blueprintDraw = interpolate(frame, [138, 260], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.19, 1, 0.22, 1),

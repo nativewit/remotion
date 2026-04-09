@@ -40,6 +40,16 @@ export const Proof: React.FC = () => {
     config: { damping: 80, mass: 0.5 },
   });
 
+  /* ── "Real products, real users" highlight (frame 271) ─── */
+  const realUsersReveal = spring({
+    frame: frame - 271,
+    fps,
+    config: { damping: 80, mass: 0.5 },
+  });
+  const realUsersPulse = frame >= 271 && frame < 339
+    ? 0.5 + Math.sin((frame - 271) * 0.12) * 0.5
+    : 0;
+
   /* ── Speed arrows for "weeks not months" ────────────────── */
   const arrowProgress = interpolate(frame, [350, 400], [0, 1], {
     extrapolateLeft: "clamp",
@@ -331,6 +341,70 @@ export const Proof: React.FC = () => {
           );
         })}
       </div>
+
+      {/* ─── "Real products, real users" visual (frame 271) ── */}
+      {realUsersReveal > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "30%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            opacity: realUsersReveal,
+          }}
+        >
+          {/* User avatar dots */}
+          {[0, 1, 2, 3, 4].map((i) => {
+            const avatarDelay = 271 + i * 6;
+            const avatarProgress = spring({
+              frame: frame - avatarDelay,
+              fps,
+              config: { damping: 60, mass: 0.3 },
+            });
+            return (
+              <div
+                key={`user-${i}`}
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: i % 2 === 0 ? theme.colors.accent : theme.colors.green,
+                  opacity: avatarProgress * 0.8,
+                  transform: `scale(${interpolate(avatarProgress, [0, 1], [0.3, 1])})`,
+                  border: `2px solid ${theme.colors.surface}`,
+                  marginLeft: i > 0 ? -8 : 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/* Tiny person silhouette */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: theme.colors.surface }} />
+                  <div style={{ width: 12, height: 6, borderRadius: "0 0 6px 6px", background: theme.colors.surface, marginTop: 1 }} />
+                </div>
+              </div>
+            );
+          })}
+          {/* Glow pulse behind avatars */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 180,
+              height: 60,
+              borderRadius: 30,
+              background: `radial-gradient(ellipse, ${theme.colors.accent}18 0%, transparent 70%)`,
+              opacity: realUsersPulse,
+            }}
+          />
+        </div>
+      )}
 
       {/* ─── "Shipped in weeks" block ─────────────────────── */}
       <div

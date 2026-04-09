@@ -32,8 +32,19 @@ export const CTA: React.FC = () => {
   });
   const logoScale = interpolate(logoProgress, [0, 1], [0.6, 1]);
 
-  /* ── Main line ──────────────────────────────────────────── */
-  const lineReveal = interpolate(frame, [13, 60], [0, 100], {
+  /* ── Phase 1: "Building something that matters" (f13-75) ─ */
+  const buildReveal = spring({
+    frame: frame - 13,
+    fps,
+    config: { damping: 80, mass: 0.5 },
+  });
+  const buildFade = interpolate(frame, [68, 82], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  /* ── Phase 2: "Let's talk." line — VO at f83 ────────────── */
+  const lineReveal = interpolate(frame, [73, 100], [0, 100], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.19, 1, 0.22, 1),
@@ -41,7 +52,7 @@ export const CTA: React.FC = () => {
 
   /* ── URL ────────────────────────────────────────────────── */
   const urlProgress = spring({
-    frame: frame - 100,
+    frame: frame - 120,
     fps,
     config: { damping: 100 },
   });
@@ -145,7 +156,45 @@ export const CTA: React.FC = () => {
         />
       </div>
 
-      {/* Main CTA line with cursor */}
+      {/* Phase 1: "Building something that matters" visual */}
+      {buildReveal > 0 && buildFade > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "32%",
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            opacity: buildReveal * buildFade,
+          }}
+        >
+          {/* Rising building blocks */}
+          {[0, 1, 2].map((i) => {
+            const blockDelay = 13 + i * 10;
+            const blockProgress = spring({
+              frame: frame - blockDelay,
+              fps,
+              config: { damping: 60, mass: 0.3 },
+            });
+            return (
+              <div
+                key={`block-${i}`}
+                style={{
+                  width: 20 + i * 6,
+                  height: 28 + i * 12,
+                  borderRadius: 4,
+                  border: `2px solid ${theme.colors.accent}${i === 2 ? '' : '66'}`,
+                  background: i === 2 ? `${theme.colors.accent}18` : 'transparent',
+                  opacity: blockProgress,
+                  transform: `translateY(${interpolate(blockProgress, [0, 1], [15, 0])}px)`,
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Phase 2: Main CTA line with cursor */}
       <div style={{ position: "relative", display: "inline-block" }}>
         <h1
           style={{

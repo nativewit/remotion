@@ -96,9 +96,9 @@ export const Authority: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
-  /* ── Device icons (mobile + web) appear with subtitle ───── */
+  /* ── Device icons (mobile + web) — VO "mobile and web" at f108 */
   const deviceProgress = spring({
-    frame: frame - 80,
+    frame: frame - 95,
     fps,
     config: { damping: 100 },
   });
