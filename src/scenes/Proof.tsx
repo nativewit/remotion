@@ -56,6 +56,32 @@ export const Proof: React.FC = () => {
         overflow: "hidden",
       }}
     >
+      {/* Floating data particles */}
+      {Array.from({ length: 10 }).map((_, i) => {
+        const px = 8 + (i * 41) % 84;
+        const py = 10 + (i * 59) % 80;
+        const drift = Math.sin((frame + i * 35) * 0.025) * 12;
+        const particleOpacity = interpolate(frame, [15, 50], [0, 0.1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+        return (
+          <div
+            key={`fp-${i}`}
+            style={{
+              position: "absolute",
+              top: `${py}%`,
+              left: `${px}%`,
+              width: i % 3 === 0 ? 4 : 3,
+              height: i % 3 === 0 ? 4 : 3,
+              borderRadius: i % 2 === 0 ? "50%" : 1,
+              background: CATEGORIES[i % 3].color,
+              opacity: particleOpacity,
+              transform: `translateY(${drift}px)`,
+            }}
+          />
+        );
+      })}
       {/* Section label */}
       <span
         style={{
@@ -138,7 +164,20 @@ export const Proof: React.FC = () => {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    background: `radial-gradient(circle at 50% 50%, ${cat.color}0a 0%, transparent 70%)`,
+                    background: `radial-gradient(circle at 50% 40%, ${cat.color}12 0%, transparent 70%)`,
+                  }}
+                />
+              )}
+
+              {/* Active pulsing border glow */}
+              {isActive && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: -1,
+                    borderRadius: 21,
+                    border: `1px solid ${cat.color}44`,
+                    opacity: 0.5 + Math.sin(frame * 0.1) * 0.3,
                   }}
                 />
               )}

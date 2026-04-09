@@ -79,6 +79,58 @@ export const CTA: React.FC = () => {
         }}
       />
 
+      {/* Expanding ring pulses */}
+      {[0, 1, 2].map((i) => {
+        const ringDelay = 50 + i * 80;
+        const ringProgress = interpolate(
+          (frame - ringDelay) % 200,
+          [0, 200],
+          [0, 1],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+        );
+        const ringOp = frame > ringDelay
+          ? interpolate(ringProgress, [0, 0.3, 1], [0, 0.15, 0])
+          : 0;
+        return (
+          <div
+            key={`ring-${i}`}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 100 + ringProgress * 500,
+              height: 100 + ringProgress * 500,
+              borderRadius: "50%",
+              border: `1px solid ${theme.colors.accent}`,
+              opacity: ringOp,
+            }}
+          />
+        );
+      })}
+
+      {/* Rising particles */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const px = 42 + (i * 17) % 20;
+        const rise = ((frame + i * 30) % 120) / 120;
+        const pOp = interpolate(rise, [0, 0.2, 0.8, 1], [0, 0.2, 0.15, 0]);
+        return (
+          <div
+            key={`rp-${i}`}
+            style={{
+              position: "absolute",
+              bottom: `${rise * 80}%`,
+              left: `${px}%`,
+              width: 2 + (i % 2),
+              height: 2 + (i % 2),
+              borderRadius: "50%",
+              background: theme.colors.accent,
+              opacity: frame > 30 ? pOp : 0,
+            }}
+          />
+        );
+      })}
+
       {/* Logo */}
       <div
         style={{
@@ -93,22 +145,39 @@ export const CTA: React.FC = () => {
         />
       </div>
 
-      {/* Main CTA line — minimal, no VO duplication */}
-      <h1
-        style={{
-          fontSize: 56,
-          fontWeight: 800,
-          color: theme.colors.textPrimary,
-          margin: 0,
-          textAlign: "center",
-          lineHeight: 1.25,
-          letterSpacing: "-1.5px",
-          maxWidth: 900,
-          clipPath: `inset(0 ${100 - lineReveal}% 0 0)`,
-        }}
-      >
-        <span style={{ color: theme.colors.accent }}>Let's talk.</span>
-      </h1>
+      {/* Main CTA line with cursor */}
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <h1
+          style={{
+            fontSize: 56,
+            fontWeight: 800,
+            color: theme.colors.textPrimary,
+            margin: 0,
+            textAlign: "center",
+            lineHeight: 1.25,
+            letterSpacing: "-1.5px",
+            maxWidth: 900,
+            clipPath: `inset(0 ${100 - lineReveal}% 0 0)`,
+          }}
+        >
+          <span style={{ color: theme.colors.accent }}>Let's talk.</span>
+        </h1>
+        {/* Blinking cursor after text */}
+        {lineReveal >= 100 && (
+          <div
+            style={{
+              position: "absolute",
+              right: -12,
+              top: "15%",
+              width: 3,
+              height: "70%",
+              background: theme.colors.accent,
+              borderRadius: 1,
+              opacity: Math.sin(frame * 0.15) > 0 ? 0.8 : 0,
+            }}
+          />
+        )}
+      </div>
 
       {/* URL */}
       <div

@@ -77,6 +77,11 @@ export const Differentiator: React.FC = () => {
     ? 0.5 + Math.sin((frame - 485) * 0.1) * 0.5
     : 0;
 
+  /* ── Traveling data dots on network connections ──────────── */
+  const dataFlowT = frame > 495
+    ? ((frame - 495) % 40) / 40
+    : 0;
+
   return (
     <AbsoluteFill
       style={{
@@ -94,6 +99,31 @@ export const Differentiator: React.FC = () => {
           background: `radial-gradient(ellipse at 65% 45%, ${theme.colors.accent}08 0%, transparent 50%)`,
         }}
       />
+
+      {/* Subtle floating code particles */}
+      {Array.from({ length: 6 }).map((_, i) => {
+        const px = 12 + (i * 43) % 76;
+        const py = 8 + (i * 61) % 84;
+        const drift = Math.sin((frame + i * 50) * 0.02) * 10;
+        return (
+          <div
+            key={`cp-${i}`}
+            style={{
+              position: "absolute",
+              top: `${py}%`,
+              left: `${px}%`,
+              fontSize: 10,
+              fontFamily: "monospace",
+              color: theme.colors.textMuted,
+              opacity: 0.08,
+              transform: `translateY(${drift}px)`,
+              userSelect: "none",
+            }}
+          >
+            {["{ }", "</>", "fn()", "[ ]", "=>", "0x"][i]}
+          </div>
+        );
+      })}
 
       {/* Slow-moving left accent line */}
       <div
@@ -120,40 +150,48 @@ export const Differentiator: React.FC = () => {
           opacity: phase1,
         }}
       >
-        {/* Rotating gear outline */}
+        {/* Rotating gear outline with proper teeth */}
         <div
           style={{
             width: 100,
             height: 100,
-            borderRadius: "50%",
-            border: `3px solid ${theme.colors.accent}55`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transform: `rotate(${frame * 0.8}deg)`,
+            position: "relative",
             marginBottom: 28,
           }}
         >
-          <div
+          <svg
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
             style={{
-              width: 50,
-              height: 50,
-              borderRadius: "50%",
-              border: `3px solid ${theme.colors.accent}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              transform: `rotate(${frame * 0.8}deg)`,
             }}
           >
-            <div
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: "50%",
-                background: theme.colors.accent,
-              }}
-            />
-          </div>
+            {/* Outer gear teeth */}
+            {Array.from({ length: 12 }).map((_, i) => {
+              const angle = (i / 12) * Math.PI * 2;
+              const x = 50 + Math.cos(angle) * 40;
+              const y = 50 + Math.sin(angle) * 40;
+              return (
+                <rect
+                  key={i}
+                  x={x - 4}
+                  y={y - 4}
+                  width="8"
+                  height="8"
+                  rx="1"
+                  fill={`${theme.colors.accent}55`}
+                  transform={`rotate(${(i / 12) * 360} ${x} ${y})`}
+                />
+              );
+            })}
+            {/* Outer ring */}
+            <circle cx="50" cy="50" r="34" fill="none" stroke={`${theme.colors.accent}55`} strokeWidth="3" />
+            {/* Inner ring */}
+            <circle cx="50" cy="50" r="20" fill="none" stroke={theme.colors.accent} strokeWidth="3" />
+            {/* Core dot */}
+            <circle cx="50" cy="50" r="8" fill={theme.colors.accent} />
+          </svg>
         </div>
         {/* 4 tiny satellite dots */}
         {[0, 90, 180, 270].map((angle) => {
@@ -572,6 +610,38 @@ export const Differentiator: React.FC = () => {
               />
             )),
           )}
+          {/* Traveling data dots on L1→L2 connections */}
+          {frame > 495 && [100, 200, 300].map((y1) => {
+            const targetY = [80, 160, 240, 320][Math.floor((frame + y1) / 20) % 4];
+            const dotX = 114 + dataFlowT * (286 - 114);
+            const dotY = y1 + dataFlowT * (targetY - y1);
+            return (
+              <circle
+                key={`df1-${y1}`}
+                cx={dotX}
+                cy={dotY}
+                r="3"
+                fill={theme.colors.accent}
+                opacity={networkPulse * 0.7}
+              />
+            );
+          })}
+          {/* Traveling data dots on L2→L3 connections */}
+          {frame > 510 && [80, 240].map((y1) => {
+            const targetY2 = y1 < 200 ? 150 : 250;
+            const dotX2 = 314 + dataFlowT * (486 - 314);
+            const dotY2 = y1 + dataFlowT * (targetY2 - y1);
+            return (
+              <circle
+                key={`df2-${y1}`}
+                cx={dotX2}
+                cy={dotY2}
+                r="3"
+                fill={theme.colors.green}
+                opacity={networkPulse * 0.6}
+              />
+            );
+          })}
         </svg>
 
         {/* "AI" badge */}

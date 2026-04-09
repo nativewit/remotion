@@ -129,6 +129,33 @@ export const Authority: React.FC = () => {
         }}
       />
 
+      {/* Floating ambient particles */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const px = 10 + (i * 37) % 80;
+        const py = 15 + (i * 53) % 70;
+        const drift = Math.sin((frame + i * 40) * 0.03) * 15;
+        const particleOpacity = interpolate(frame, [20, 60], [0, 0.15], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+        return (
+          <div
+            key={`ap-${i}`}
+            style={{
+              position: "absolute",
+              top: `${py + drift * 0.3}%`,
+              left: `${px}%`,
+              width: 3 + (i % 3),
+              height: 3 + (i % 3),
+              borderRadius: "50%",
+              background: theme.colors.accent,
+              opacity: particleOpacity,
+              transform: `translateY(${drift}px)`,
+            }}
+          />
+        );
+      })}
+
       {/* ─── Brand block (lifts up to make space for stats) ─── */}
       <div
         style={{
@@ -138,18 +165,50 @@ export const Authority: React.FC = () => {
           transform: `translateY(${brandLift}px)`,
         }}
       >
-        {/* Logo */}
+        {/* Logo with shimmer + pulse ring */}
         <div
           style={{
             opacity: logoProgress,
             transform: `scale(${logoScale})`,
             marginBottom: 20,
+            position: "relative",
           }}
         >
-          <Img
-            src={staticFile("logo.png")}
-            style={{ width: 90, height: "auto" }}
+          {/* Pulse ring around logo */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 130,
+              height: 130,
+              borderRadius: "50%",
+              border: `1px solid ${theme.colors.accent}22`,
+              opacity: 0.5 + Math.sin(frame * 0.08) * 0.3,
+            }}
           />
+          <div
+            style={{
+              position: "relative",
+              overflow: "hidden",
+              borderRadius: 8,
+            }}
+          >
+            <Img
+              src={staticFile("logo.png")}
+              style={{ width: 90, height: "auto" }}
+            />
+            {/* Shimmer sweep */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: `linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)`,
+                transform: `translateX(${interpolate(frame, [5, 35], [-100, 200], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}%)`,
+              }}
+            />
+          </div>
         </div>
 
         {/* Brand name */}
@@ -412,32 +471,67 @@ export const Authority: React.FC = () => {
           );
         })}
 
-        {/* Connection lines between dots */}
+        {/* Connection arc lines between dots */}
         <svg
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          <line
-            x1="18"
-            y1="38"
-            x2="72"
-            y2="42"
+          {/* US → Asia arc */}
+          <path
+            d="M 18 38 Q 45 20 72 42"
+            fill="none"
+            stroke={theme.colors.accent}
+            strokeWidth="0.2"
+            opacity={mapOpacity * 0.5}
+            strokeDasharray="2 1.5"
+            strokeDashoffset={interpolate(frame, [281, 390], [50, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            })}
+          />
+          {/* Asia → AU arc */}
+          <path
+            d="M 72 42 Q 82 55 80 72"
+            fill="none"
+            stroke={theme.colors.accent}
+            strokeWidth="0.2"
+            opacity={mapOpacity * 0.5}
+            strokeDasharray="2 1.5"
+            strokeDashoffset={interpolate(frame, [300, 390], [30, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            })}
+          />
+          {/* US → AU arc */}
+          <path
+            d="M 18 38 Q 50 70 80 72"
+            fill="none"
             stroke={theme.colors.accent}
             strokeWidth="0.15"
-            opacity={mapOpacity * 0.4}
-            strokeDasharray="1 1"
+            opacity={mapOpacity * 0.3}
+            strokeDasharray="2 2"
+            strokeDashoffset={interpolate(frame, [310, 390], [80, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            })}
           />
-          <line
-            x1="72"
-            y1="42"
-            x2="80"
-            y2="72"
-            stroke={theme.colors.accent}
-            strokeWidth="0.15"
-            opacity={mapOpacity * 0.4}
-            strokeDasharray="1 1"
-          />
+          {/* Traveling dot on US→Asia path */}
+          {frame > 300 && (
+            <circle
+              cx={interpolate(frame, [300, 370], [18, 72], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              })}
+              cy={interpolate(frame, [300, 335, 370], [38, 24, 42], {
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              })}
+              r="0.8"
+              fill={theme.colors.accent}
+              opacity={mapOpacity * 0.8}
+            />
+          )}
         </svg>
       </div>
     </AbsoluteFill>
