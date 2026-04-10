@@ -34,8 +34,10 @@ export const Problem: React.FC = () => {
   /* ── Character speed for animation ──────────────────────── */
   const charSpeed = interpolate(frame, [0, 60, 97, 158, 252, 345], [90, 85, 70, 30, 15, 5], { extrapolateRight: "clamp" });
 
-  /* ── Character running animation — leg movement ─────────── */
-  const runCycle = Math.sin(frame * 0.12 * (charSpeed / 30 + 0.5)) * Math.min(charSpeed / 80, 1);
+  /* ── Character running animation — always visible even at low speed ── */
+  const runFreq = 0.06 + (charSpeed / 100) * 0.12;   // 0.06 slow walk → 0.18 fast sprint
+  const runAmp  = 0.3  + (charSpeed / 100) * 0.7;    // always at least 0.3 amplitude
+  const runCycle = Math.sin(frame * runFreq) * runAmp;
   const legAngle = runCycle * 25;
 
   /* ── Speed lines fade as character slows ───────────────── */
