@@ -175,12 +175,12 @@ export const CTA: React.FC = () => {
         style={{
           opacity: logoProgress,
           transform: `scale(${logoScale * breatheScale}) translateY(${breatheY}px)`,
-          marginBottom: 40,
+          marginBottom: 30,
         }}
       >
         <Img
           src={staticFile("logo.png")}
-          style={{ width: 140, height: "auto" }}
+          style={{ width: 120, height: "auto" }}
         />
       </div>
 
@@ -189,7 +189,7 @@ export const CTA: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "26%",
+            top: "8%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -354,7 +354,7 @@ export const CTA: React.FC = () => {
       {/* Trust indicators */}
       {frame > 160 && (
         <div style={{
-          position: "absolute", bottom: "8%", display: "flex", alignItems: "center", gap: 40,
+          position: "absolute", bottom: "6%", display: "flex", alignItems: "center", gap: 50,
           opacity: interpolate(frame, [160, 185], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}>
           {[
@@ -366,8 +366,8 @@ export const CTA: React.FC = () => {
               display: "flex", alignItems: "center", gap: 8,
               opacity: interpolate(frame, [165 + i * 12, 180 + i * 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             }}>
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 2 }}>{item.text}</span>
+              <span style={{ fontSize: 20 }}>{item.icon}</span>
+              <span style={{ fontSize: 16, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 2 }}>{item.text}</span>
             </div>
           ))}
         </div>

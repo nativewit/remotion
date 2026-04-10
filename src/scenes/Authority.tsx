@@ -143,7 +143,7 @@ export const Authority: React.FC = () => {
             opacity: phoneMockProgress, transform: `scale(${interpolate(phoneMockProgress, [0, 1], [0.5, 1])}) translateY(${breatheY}px)`,
           }}>
             <div style={{
-              width: 180, height: 320, borderRadius: 24, border: `3px solid ${theme.colors.accent}66`,
+              width: 220, height: 380, borderRadius: 28, border: `3px solid ${theme.colors.accent}66`,
               background: theme.colors.surface, position: "relative", overflow: "hidden",
               boxShadow: `0 16px 50px rgba(0,0,0,0.5)`,
             }}>
@@ -157,17 +157,10 @@ export const Authority: React.FC = () => {
               <div style={{
                 position: "absolute", bottom: 50, left: 0, right: 0, textAlign: "center",
               }}>
-                <div style={{ fontSize: 52, fontWeight: 900, color: theme.colors.accent, lineHeight: 1 }}>{phoneCount}+</div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>Mobile Apps</div>
+                <div style={{ fontSize: 64, fontWeight: 900, color: theme.colors.accent, lineHeight: 1 }}>{yearsCount}+</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 6 }}>Years</div>
               </div>
-              {/* Years badge */}
-              <div style={{
-                position: "absolute", top: 30, right: 8, padding: "4px 10px", borderRadius: 8,
-                background: `${theme.colors.accent}33`, border: `1px solid ${theme.colors.accent}55`,
-                opacity: yearsOpacity,
-              }}>
-                <span style={{ fontSize: 16, fontWeight: 900, color: theme.colors.accent }}>{yearsCount}+ yrs</span>
-              </div>
+
             </div>
             <div style={{ textAlign: "center", marginTop: 10, fontSize: 18, fontWeight: 800, color: theme.colors.accent, letterSpacing: 3, textTransform: "uppercase" }}>
               MOBILE
@@ -179,7 +172,7 @@ export const Authority: React.FC = () => {
             opacity: desktopMockProgress, transform: `scale(${interpolate(desktopMockProgress, [0, 1], [0.5, 1])}) translateY(${-breatheY}px)`,
           }}>
             <div style={{
-              width: 300, height: 200, borderRadius: 14, border: `3px solid ${theme.colors.blue}66`,
+              width: 380, height: 260, borderRadius: 14, border: `3px solid ${theme.colors.blue}66`,
               background: theme.colors.surface, position: "relative", overflow: "hidden",
               boxShadow: `0 16px 50px rgba(0,0,0,0.5)`,
             }}>
@@ -200,17 +193,10 @@ export const Authority: React.FC = () => {
               <div style={{
                 position: "absolute", bottom: 22, left: 0, right: 0, textAlign: "center",
               }}>
-                <div style={{ fontSize: 40, fontWeight: 900, color: theme.colors.blue, lineHeight: 1 }}>{desktopCount}+</div>
-                <div style={{ fontSize: 12, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 3 }}>Web Apps</div>
+                <div style={{ fontSize: 56, fontWeight: 900, color: theme.colors.blue, lineHeight: 1 }}>{productsCount}+</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 5 }}>Products shipped</div>
               </div>
-              {/* Products badge */}
-              <div style={{
-                position: "absolute", top: 24, right: 10, padding: "4px 10px", borderRadius: 8,
-                background: `${theme.colors.blue}33`, border: `1px solid ${theme.colors.blue}55`,
-                opacity: productsOpacity,
-              }}>
-                <span style={{ fontSize: 14, fontWeight: 900, color: theme.colors.blue }}>{productsCount}+ shipped</span>
-              </div>
+
             </div>
             {/* Desktop stand */}
             <div style={{ width: 70, height: 22, margin: "0 auto", borderLeft: `2px solid ${theme.colors.border}`, borderRight: `2px solid ${theme.colors.border}`, borderBottom: `2px solid ${theme.colors.border}`, borderRadius: "0 0 8px 8px" }} />
@@ -221,20 +207,7 @@ export const Authority: React.FC = () => {
         </div>
       )}
 
-      {/* ── Stats row ─────────────────────────────────────── */}
-      <div style={{
-        position: "absolute", top: "62%", display: "flex", gap: 80, alignItems: "center",
-        transform: `translateY(${breatheY}px)`,
-      }}>
-        <div style={{ textAlign: "center", opacity: yearsOpacity }}>
-          <div style={{ fontSize: 72, fontWeight: 900, color: theme.colors.accent, lineHeight: 1, letterSpacing: "-1px" }}>{yearsCount}+</div>
-          <p style={{ fontSize: 22, color: theme.colors.textMuted, margin: "10px 0 0", fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5 }}>Years</p>
-        </div>
-        <div style={{ textAlign: "center", opacity: productsOpacity }}>
-          <div style={{ fontSize: 72, fontWeight: 900, color: theme.colors.accent, lineHeight: 1, letterSpacing: "-1px" }}>{productsCount}+</div>
-          <p style={{ fontSize: 22, color: theme.colors.textMuted, margin: "10px 0 0", fontWeight: 700, textTransform: "uppercase", letterSpacing: 2.5 }}>Products shipped</p>
-        </div>
-      </div>
+
 
       {/* ── World map region circles ──────────────────────── */}
       <div style={{ position: "absolute", inset: 0, opacity: mapOpacity }}>

@@ -35,7 +35,7 @@ export const Problem: React.FC = () => {
   const charSpeed = interpolate(frame, [0, 60, 97, 158, 252, 345], [90, 85, 70, 30, 15, 5], { extrapolateRight: "clamp" });
 
   /* ── Character running animation — leg movement ─────────── */
-  const runCycle = Math.sin(frame * (charSpeed / 20)) * (charSpeed / 100);
+  const runCycle = Math.sin(frame * 0.12 * (charSpeed / 30 + 0.5)) * Math.min(charSpeed / 80, 1);
   const legAngle = runCycle * 25;
 
   /* ── Speed lines fade as character slows ───────────────── */
@@ -165,52 +165,52 @@ export const Problem: React.FC = () => {
         );
       })}
 
-      {/* ── Running character (side-view) ───────────────── */}
-      <div style={{ position: "absolute", top: "50%", left: `${charX}%`, transform: "translate(-50%, -50%)" }}>
-        <svg width="70" height="80" viewBox="0 0 70 80" style={{
-          filter: `drop-shadow(0 0 ${20 * (charSpeed / 100)}px ${theme.colors.accent}66)`,
+      {/* ── Running character (side-view, on top of line) ── */}
+      <div style={{ position: "absolute", top: "50%", left: `${charX}%`, transform: "translate(-50%, -84%)" }}>
+        <svg width="60" height="72" viewBox="0 0 60 72" style={{
+          filter: `drop-shadow(0 0 ${16 * (charSpeed / 100)}px ${theme.colors.accent}66)`,
         }}>
-          {/* Head — side view */}
-          <ellipse cx="38" cy="12" rx="11" ry="10" fill={theme.colors.accent} opacity="0.9" />
+          {/* Head — round */}
+          <circle cx="34" cy="11" r="10" fill={theme.colors.accent} opacity="0.9" />
           {/* Eye */}
-          <circle cx="44" cy="10" r="2.5" fill={theme.colors.bg} />
-          <circle cx="45" cy="9.5" r="1" fill={theme.colors.textPrimary} />
+          <circle cx="39" cy="9" r="2" fill={theme.colors.bg} />
+          <circle cx="39.5" cy="8.5" r="0.8" fill={theme.colors.textPrimary} />
           {/* Mouth */}
-          <path d="M44 16 Q47 17 46 15" fill="none" stroke={theme.colors.bg} strokeWidth="1.5" strokeLinecap="round" />
-          {/* Torso — leaning forward when fast */}
-          <rect x="24" y="22" width="18" height="22" rx="5" fill={theme.colors.accent} opacity="0.8"
-            transform={`rotate(${interpolate(charSpeed, [0, 90], [0, -12])} 33 33)`} />
-          {/* Back arm (behind torso) */}
-          <line x1="28" y1="28" x2={22 + runCycle * 6} y2={42 + Math.abs(runCycle) * 6}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.5" />
-          {/* Front arm (pumping) */}
-          <line x1="38" y1="28" x2={48 - runCycle * 6} y2={38 - Math.abs(runCycle) * 8}
-            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.75" />
+          <path d="M37 15 Q40 16 39 14" fill="none" stroke={theme.colors.bg} strokeWidth="1.2" strokeLinecap="round" />
+          {/* Body — leaning forward when fast */}
+          <rect x="25" y="21" width="16" height="18" rx="4" fill={theme.colors.accent} opacity="0.8"
+            transform={`rotate(${interpolate(charSpeed, [0, 90], [0, -10])} 33 30)`} />
+          {/* Back arm */}
+          <line x1="28" y1="26" x2={24 + runCycle * 5} y2={38 + Math.abs(runCycle) * 5}
+            stroke={theme.colors.accent} strokeWidth="3.5" strokeLinecap="round" opacity="0.5" />
+          {/* Front arm */}
+          <line x1="38" y1="26" x2={44 - runCycle * 5} y2={34 - Math.abs(runCycle) * 6}
+            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.75" />
           {/* Back leg */}
-          <line x1="28" y1="44" x2={28 - Math.sin((legAngle * Math.PI) / 180) * 14}
-            y2={44 + Math.cos((legAngle * Math.PI) / 180) * 22}
-            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.55" />
+          <line x1="29" y1="39" x2={29 - Math.sin((legAngle * Math.PI) / 180) * 12}
+            y2={39 + Math.cos((legAngle * Math.PI) / 180) * 24}
+            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.55" />
           {/* Front leg */}
-          <line x1="36" y1="44" x2={36 + Math.sin((legAngle * Math.PI) / 180) * 14}
-            y2={44 + Math.cos((legAngle * Math.PI) / 180) * 22}
-            stroke={theme.colors.accent} strokeWidth="5" strokeLinecap="round" opacity="0.75" />
+          <line x1="37" y1="39" x2={37 + Math.sin((legAngle * Math.PI) / 180) * 12}
+            y2={39 + Math.cos((legAngle * Math.PI) / 180) * 24}
+            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.75" />
           {/* Shoe on front leg */}
-          <ellipse cx={36 + Math.sin((legAngle * Math.PI) / 180) * 14 + 3}
-            cy={44 + Math.cos((legAngle * Math.PI) / 180) * 22 + 1}
-            rx="5" ry="2.5" fill={theme.colors.accent} opacity="0.8" />
+          <ellipse cx={37 + Math.sin((legAngle * Math.PI) / 180) * 12 + 3}
+            cy={39 + Math.cos((legAngle * Math.PI) / 180) * 24 + 1}
+            rx="4" ry="2" fill={theme.colors.accent} opacity="0.8" />
           {/* Speed hair blown back when fast */}
           {charSpeed > 30 && (
             <>
-              <path d={`M28 6 Q${22 - charSpeed * 0.06} 3 ${18 - charSpeed * 0.08} 8`}
-                fill="none" stroke={theme.colors.accentSoft} strokeWidth="2" opacity="0.5" />
-              <path d={`M27 10 Q${20 - charSpeed * 0.05} 9 ${16 - charSpeed * 0.07} 13`}
-                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.5" opacity="0.4" />
+              <path d={`M24 5 Q${20 - charSpeed * 0.04} 3 ${16 - charSpeed * 0.06} 7`}
+                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.5" opacity="0.5" />
+              <path d={`M23 9 Q${18 - charSpeed * 0.03} 8 ${14 - charSpeed * 0.05} 12`}
+                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.2" opacity="0.4" />
             </>
           )}
-          {/* Motion blur streaks */}
+          {/* Motion blur */}
           {charSpeed > 50 && Array.from({ length: 3 }).map((_, k) => (
-            <line key={k} x1={10} y1={20 + k * 14} x2={10 - charSpeed * 0.15} y2={20 + k * 14}
-              stroke={theme.colors.accent} strokeWidth="1.5" strokeLinecap="round" opacity={0.15 + k * 0.05} />
+            <line key={k} x1={8} y1={16 + k * 12} x2={8 - charSpeed * 0.12} y2={16 + k * 12}
+              stroke={theme.colors.accent} strokeWidth="1.5" strokeLinecap="round" opacity={0.12 + k * 0.04} />
           ))}
         </svg>
       </div>

@@ -44,14 +44,28 @@ export const Proof: React.FC = () => {
     >
       <GeometricBg frame={frame} opacity={0.04} />
 
+      {/* Persistent "What we shipped" popup across all category slides */}
+      {frame < 265 && (
+        <div style={{
+          position: "absolute", top: 40, left: "50%",
+          padding: "14px 40px", borderRadius: 20,
+          background: `${theme.colors.accent}15`, border: `2px solid ${theme.colors.accent}44`,
+          opacity: interpolate(frame, [0, 12, 245, 260], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          zIndex: 10,
+          boxShadow: `0 4px 24px ${theme.colors.accent}22`,
+          transform: `translateX(-50%) scale(${interpolate(frame, [0, 12], [0.8, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`,
+        }}>
+          <span style={{ fontSize: 22, fontWeight: 900, color: theme.colors.accent, letterSpacing: 5, textTransform: "uppercase" }}>What we shipped</span>
+        </div>
+      )}
+
       {/* ═══ CAT 1: AI / Video Production ═══ */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 60, opacity: cat1 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-          <span style={{ fontSize: 16, fontWeight: 800, color: "#8b5cf6", letterSpacing: 4, textTransform: "uppercase", opacity: 0.7 }}>What we shipped</span>
-          <span style={{ fontSize: 40, fontWeight: 900, color: "#8b5cf6", letterSpacing: 3 }}>AI Video Production</span>
+          <span style={{ fontSize: 52, fontWeight: 900, color: "#8b5cf6", letterSpacing: 3 }}>AI Video Production</span>
         </div>
         {/* Video editor timeline */}
-        <svg width="600" height="340" viewBox="0 0 600 340">
+        <svg width="720" height="400" viewBox="0 0 600 340">
           {/* Editor window */}
           <rect x="10" y="10" width="580" height="320" rx="12" fill={theme.colors.surface} stroke={"#8b5cf644"} strokeWidth="2"
             opacity={interpolate(frame, [5, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
@@ -104,10 +118,9 @@ export const Proof: React.FC = () => {
       {/* ═══ CAT 2: Health Research ═══ */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 60, opacity: cat2 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-          <span style={{ fontSize: 16, fontWeight: 800, color: theme.colors.green, letterSpacing: 4, textTransform: "uppercase", opacity: 0.7 }}>What we shipped</span>
-          <span style={{ fontSize: 40, fontWeight: 900, color: theme.colors.green, letterSpacing: 3 }}>Health Research</span>
+          <span style={{ fontSize: 52, fontWeight: 900, color: theme.colors.green, letterSpacing: 3 }}>Health Research</span>
         </div>
-        <svg width="550" height="360" viewBox="0 0 550 360">
+        <svg width="660" height="420" viewBox="0 0 550 360">
           {/* Dashboard frame */}
           <rect x="10" y="10" width="530" height="340" rx="14" fill={theme.colors.surface} stroke={`${theme.colors.green}44`} strokeWidth="2" />
           {/* Sidebar */}
@@ -155,10 +168,9 @@ export const Proof: React.FC = () => {
       {/* ═══ CAT 3: Financial Automation ═══ */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 60, opacity: cat3 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-          <span style={{ fontSize: 16, fontWeight: 800, color: theme.colors.blue, letterSpacing: 4, textTransform: "uppercase", opacity: 0.7 }}>What we shipped</span>
-          <span style={{ fontSize: 40, fontWeight: 900, color: theme.colors.blue, letterSpacing: 3 }}>Financial Automation</span>
+          <span style={{ fontSize: 52, fontWeight: 900, color: theme.colors.blue, letterSpacing: 3 }}>Financial Automation</span>
         </div>
-        <svg width="580" height="340" viewBox="0 0 580 340">
+        <svg width="700" height="400" viewBox="0 0 580 340">
           {/* Dashboard */}
           <rect x="10" y="10" width="560" height="320" rx="14" fill={theme.colors.surface} stroke={`${theme.colors.blue}44`} strokeWidth="2" />
           {/* Top stat cards */}
