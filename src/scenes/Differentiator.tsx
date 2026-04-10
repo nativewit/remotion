@@ -25,7 +25,7 @@ export const Differentiator: React.FC = () => {
   const frame = useCurrentFrame();
 
   const entryFade = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
-  const exitFade = interpolate(frame, [615, 645], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const exitFade = interpolate(frame, [645, 675], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const lineY = interpolate(frame, [0, 645], [8, 92], { easing: Easing.bezier(0.19, 1, 0.22, 1) });
 

@@ -181,10 +181,10 @@ export const Problem: React.FC = () => {
           const armAmp    = 10 + (charSpeed / 100) * 14;
           const armSwg    = -cycle * armAmp;
 
-          // Forward lean: straight when slow, leans forward when running
-          // Kicks in only above charSpeed 25, ramps to 12px at full sprint
+          // Forward lean: straight when slow, leans forward slightly when running
+          // Kicks in only above charSpeed 25, ramps to 6px at full sprint
           // Character is rendered with scaleX(-1), so subtracting lean shifts upper body forward
-          const lean = interpolate(charSpeed, [25, 100], [0, 12], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+          const lean = interpolate(charSpeed, [25, 100], [0, 6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
           // Geometry (scaled down ~30%)
           const cx = 24;

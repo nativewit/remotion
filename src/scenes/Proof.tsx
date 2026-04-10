@@ -9,28 +9,36 @@ import { GeometricBg } from "../components/GeometricBg";
 import { RobotGuide } from "../components/RobotGuide";
 
 /**
- * PROOF — 29.5–44s (435 frames)
- * Phase 1: Sequential category showcases (one at a time with rich animations)
- *   - AI/Video Production (frames 0-85): editor timeline, b-roll clips, play buttons
- *   - Health Research (frames 85-170): medical dashboard, pulse, research cards
- *   - Financial Automation (frames 170-255): trading charts, invoices, auto-gears
- * Phase 2: Real products, real users (frames 265-345)
- * Phase 3: Weeks, not months (frames 335-435)
+ * PROOF — synced to VO 31.0–46.9s (480 frames)
+ * Phase 1: Sequential category showcases (one at a time, synced to VO)
+ *   - AI/Video Production  (frames 0-90):   VO "AI-powered video production tools"
+ *   - Health Research      (frames 90-238):  VO "mental health research platforms..."
+ *   - Financial Automation (frames 238-330): VO "financial automation for SMEs"
+ * Phase 2: Real products, real users (frames 330-396)
+ * Phase 3: Weeks, not months (frames 396-478)
  */
 
 export const Proof: React.FC = () => {
   const frame = useCurrentFrame();
 
   const entryFade = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
-  const exitFade = interpolate(frame, [405, 435], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const exitFade = interpolate(frame, [450, 480], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  /* Category show/hide — sequential */
-  const cat1 = interpolate(frame, [0, 15, 70, 85], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const cat2 = interpolate(frame, [85, 100, 155, 170], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const cat3 = interpolate(frame, [170, 185, 240, 255], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  /* Category show/hide — synced to VO transcript timing
+   * Proof scene starts at video frame 960 = VO 31.0s (VO offset = INTRO_DELAY 1s).
+   * Segment boundaries (frames within Proof scene):
+   *   Cat 1 AI Video:    0  – 102  VO "AI-powered video" lands at Proof frame ~1 (VO 31.039s)
+   *   Cat 2 Health:     102 – 238  VO "mental health research platforms" (VO ~34.4s)
+   *   Cat 3 Financial:  238 – 330  VO "financial automation for SMEs" (VO ~38.9s)
+   *   Phase 2 Real:     330 – 396  VO "Real products. Real users." (VO ~42.0s)
+   *   Phase 3 Weeks:    396 – 478  VO "Shipped in weeks, not months" (VO ~44.2s)
+   */
+  const cat1 = interpolate(frame, [30, 42, 90, 102], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const cat2 = interpolate(frame, [132, 144, 256, 268], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const cat3 = interpolate(frame, [268, 280, 348, 360], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  const phase2 = interpolate(frame, [255, 275, 325, 345], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const phase3 = interpolate(frame, [335, 355, 405, 435], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const phase2 = interpolate(frame, [360, 372, 414, 426], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const phase3 = interpolate(frame, [426, 440, 488, 508], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const breathe = Math.sin(frame * Math.PI / 30);
   const breatheY = breathe * 3;
@@ -45,12 +53,12 @@ export const Proof: React.FC = () => {
       <GeometricBg frame={frame} opacity={0.04} />
 
       {/* Persistent "What we shipped" popup across all category slides */}
-      {frame < 265 && (
+      {frame < 360 && (
         <div style={{
           position: "absolute", top: 40, left: "50%",
           padding: "14px 40px", borderRadius: 20,
           background: `${theme.colors.accent}15`, border: `2px solid ${theme.colors.accent}44`,
-          opacity: interpolate(frame, [0, 12, 245, 260], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          opacity: interpolate(frame, [0, 12, 345, 360], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           zIndex: 10,
           boxShadow: `0 4px 24px ${theme.colors.accent}22`,
           transform: `translateX(-50%) scale(${interpolate(frame, [0, 12], [0.8, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`,
@@ -68,7 +76,7 @@ export const Proof: React.FC = () => {
         <svg width="720" height="400" viewBox="0 0 600 340">
           {/* Editor window */}
           <rect x="10" y="10" width="580" height="320" rx="12" fill={theme.colors.surface} stroke={"#8b5cf644"} strokeWidth="2"
-            opacity={interpolate(frame, [5, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+            opacity={interpolate(frame, [30, 45], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
           {/* Title bar */}
           <rect x="10" y="10" width="580" height="28" rx="12" fill={theme.colors.surfaceLight} opacity={0.8} />
           {[0,1,2].map(d => <circle key={d} cx={28 + d * 16} cy="24" r="4" fill={d === 0 ? "#e63434" : d === 1 ? "#eab308" : theme.colors.green} opacity="0.6" />)}
@@ -79,7 +87,7 @@ export const Proof: React.FC = () => {
           <polygon points="180,120 220,140 180,160" fill="#8b5cf6" opacity={0.5 + Math.sin(frame * 0.1) * 0.3} />
           {/* B-Roll clips panel */}
           {[0, 1, 2].map(c => {
-            const clipP = interpolate(frame, [15 + c * 10, 30 + c * 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const clipP = interpolate(frame, [40 + c * 10, 55 + c * 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             return (
               <g key={`clip-${c}`} opacity={clipP}>
                 <rect x={395} y={50 + c * 58} width="185" height="48" rx="6" fill={`#8b5cf6${c === 1 ? "22" : "15"}`} stroke={"#8b5cf633"} strokeWidth="1" />
@@ -97,7 +105,7 @@ export const Proof: React.FC = () => {
           {/* Timeline tracks */}
           {[0, 1, 2].map((t, ti) => {
             const trackColors = ["#8b5cf6", "#a78bfa", "#7c3aed"];
-            const trackP = interpolate(frame, [25 + ti * 8, 55 + ti * 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const trackP = interpolate(frame, [50 + ti * 8, 80 + ti * 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             return (
               <g key={`track-${t}`}>
                 <rect x="20" y={240 + t * 28} width={560 * trackP} height="20" rx="4" fill={`${trackColors[ti]}33`} stroke={`${trackColors[ti]}55`} strokeWidth="1" />
@@ -127,12 +135,12 @@ export const Proof: React.FC = () => {
           <rect x="10" y="10" width="100" height="340" rx="14" fill={theme.colors.surfaceLight} opacity="0.5" />
           {[0,1,2,3,4].map(n => <rect key={n} x="22" y={50 + n * 36} width="66" height="8" rx="4" fill={theme.colors.green} opacity={n === 1 ? 0.6 : 0.2} />)}
           {/* Heart ECG */}
-          <polyline points={`120,80 160,80 175,60 185,100 195,70 205,85 250,85 ${250 + ((frame - 85) % 40) * 2},${85 - Math.sin((frame - 85) * 0.3) * 15}`}
+          <polyline points={`120,80 160,80 175,60 185,100 195,70 205,85 250,85 ${250 + ((frame - 90) % 40) * 2},${85 - Math.sin((frame - 90) * 0.3) * 15}`}
             fill="none" stroke={theme.colors.green} strokeWidth="2.5" opacity="0.8"
-            strokeDasharray="200" strokeDashoffset={interpolate(frame, [88, 140], [200, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+            strokeDasharray="200" strokeDashoffset={interpolate(frame, [123, 210], [200, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
           {/* Patient data cards */}
           {[0, 1, 2].map(c => {
-            const cardP = interpolate(frame - 90, [c * 12, c * 12 + 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const cardP = interpolate(frame - 125, [c * 12, c * 12 + 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             return (
               <g key={`hcard-${c}`} opacity={cardP}>
                 <rect x={120 + c * 140} y="120" width="125" height="100" rx="8" fill={`${theme.colors.green}12`} stroke={`${theme.colors.green}33`} strokeWidth="1.5" />
@@ -153,7 +161,7 @@ export const Proof: React.FC = () => {
           })}
           {/* Progress bars */}
           {[0.7, 0.45, 0.85].map((w, i) => {
-            const barP = interpolate(frame - 100, [i * 10, i * 10 + 20], [0, w], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const barP = interpolate(frame - 135, [i * 10, i * 10 + 20], [0, w], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             return (
               <g key={`bar-${i}`}>
                 <rect x="120" y={245 + i * 28} width="400" height="14" rx="7" fill={`${theme.colors.green}15`} />
@@ -175,7 +183,7 @@ export const Proof: React.FC = () => {
           <rect x="10" y="10" width="560" height="320" rx="14" fill={theme.colors.surface} stroke={`${theme.colors.blue}44`} strokeWidth="2" />
           {/* Top stat cards */}
           {[0, 1, 2].map(c => {
-            const sp = interpolate(frame - 175, [c * 8, c * 8 + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const sp = interpolate(frame - 273, [c * 8, c * 8 + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             const vals = ["$247K", "1,842", "99.7%"];
             const labels = ["REVENUE", "TRANSACTIONS", "ACCURACY"];
             return (
@@ -192,7 +200,7 @@ export const Proof: React.FC = () => {
           {[0, 1, 2, 3].map(g => <line key={`cg-${g}`} x1="25" y1={145 + g * 42} x2="365" y2={145 + g * 42} stroke={theme.colors.blue} strokeWidth="0.5" opacity="0.1" />)}
           {/* Candlesticks */}
           {Array.from({ length: 16 }).map((_, i) => {
-            const cp = interpolate(frame - 180, [i * 2, i * 2 + 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const cp = interpolate(frame - 278, [i * 2, i * 2 + 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             const h = 15 + Math.sin(i * 1.3) * 30 + Math.cos(i * 0.7) * 20;
             const isUp = Math.sin(i * 2.1) > 0;
             return (
@@ -206,7 +214,7 @@ export const Proof: React.FC = () => {
           <rect x="385" y="105" width="170" height="200" rx="8" fill={`${theme.colors.blue}08`} stroke={`${theme.colors.blue}22`} strokeWidth="1" />
           <text x="470" y="125" textAnchor="middle" fill={theme.colors.blue} fontSize="10" fontWeight="800" letterSpacing="1.5" opacity="0.6">AUTOMATION</text>
           {/* Gears spinning */}
-          <g style={{ transform: `rotate(${(frame - 170) * 1.2}deg)`, transformOrigin: "440px 170px" }}>
+          <g style={{ transform: `rotate(${(frame - 268) * 1.2}deg)`, transformOrigin: "440px 170px" }}>
             <circle cx="440" cy="170" r="18" fill="none" stroke={theme.colors.blue} strokeWidth="2" opacity="0.4" />
             <circle cx="440" cy="170" r="6" fill={theme.colors.blue} opacity="0.3" />
             {[0, 60, 120, 180, 240, 300].map(a => {
@@ -214,13 +222,13 @@ export const Proof: React.FC = () => {
               return <rect key={a} x={440 + Math.cos(rad) * 20 - 3} y={170 + Math.sin(rad) * 20 - 3} width="6" height="6" rx="1" fill={theme.colors.blue} opacity="0.5" />;
             })}
           </g>
-          <g style={{ transform: `rotate(${-(frame - 170) * 1.8}deg)`, transformOrigin: "500px 190px" }}>
+          <g style={{ transform: `rotate(${-(frame - 268) * 1.8}deg)`, transformOrigin: "100px 95px" }}>
             <circle cx="500" cy="190" r="12" fill="none" stroke={theme.colors.blue} strokeWidth="1.5" opacity="0.3" />
             <circle cx="500" cy="190" r="4" fill={theme.colors.blue} opacity="0.3" />
           </g>
           {/* Invoice rows */}
           {[0, 1, 2].map(r => {
-            const rp = interpolate(frame - 190, [r * 10, r * 10 + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+              const rp = interpolate(frame - 288, [r * 10, r * 10 + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
             return (
               <g key={`inv-${r}`} opacity={rp}>
                 <rect x="395" y={215 + r * 28} width="150" height="20" rx="4" fill={`${theme.colors.blue}15`} />
@@ -251,7 +259,7 @@ export const Proof: React.FC = () => {
               border: `2px solid ${theme.colors.border}`, background: theme.colors.surface,
               overflow: "hidden", transform: "rotate(-4deg)",
               boxShadow: `0 16px 40px rgba(0,0,0,0.4)`,
-              opacity: interpolate(frame, [260, 278], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              opacity: interpolate(frame, [365, 383], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             }}>
               <div style={{ height: 16, background: theme.colors.surfaceLight, display: "flex", alignItems: "center", padding: "0 6px", gap: 3 }}>
                 {[0,1,2].map(d => <div key={d} style={{ width: 5, height: 5, borderRadius: "50%", background: d === 0 ? theme.colors.accent : theme.colors.textMuted, opacity: 0.5 }} />)}
@@ -271,7 +279,7 @@ export const Proof: React.FC = () => {
               border: `2px solid ${theme.colors.accent}55`, background: theme.colors.surface,
               overflow: "hidden", transform: "rotate(3deg)",
               boxShadow: `0 16px 40px rgba(0,0,0,0.5)`,
-              opacity: interpolate(frame, [265, 285], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              opacity: interpolate(frame, [370, 390], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             }}>
               <div style={{ height: 18, background: theme.colors.accent, opacity: 0.7 }} />
               {[0.6, 0.8, 0.5, 0.7].map((w, j) => <div key={j} style={{ margin: `${6 + j}px 8px 0`, height: 5, width: `${w * 100}%`, background: theme.colors.border, borderRadius: 3 }} />)}
@@ -283,7 +291,7 @@ export const Proof: React.FC = () => {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
             <div style={{ display: "flex" }}>
               {[0, 1, 2, 3, 4, 5].map(i => {
-                const aP = interpolate(frame - (262 + i * 3), [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) });
+                const aP = interpolate(frame - (367 + i * 3), [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) });
                 return (
                   <div key={i} style={{
                     width: 44, height: 44, borderRadius: "50%",
@@ -302,7 +310,7 @@ export const Proof: React.FC = () => {
             </div>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 60, fontWeight: 900, color: theme.colors.accent, lineHeight: 1, letterSpacing: "-2px" }}>
-                {Math.min(1000, Math.floor(interpolate(frame, [268, 310], [0, 1000], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })))}+
+                {Math.min(1000, Math.floor(interpolate(frame, [373, 415], [0, 1000], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })))}+
               </div>
               <span style={{ fontSize: 20, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 3, textTransform: "uppercase" }}>Active Users</span>
             </div>
@@ -320,7 +328,7 @@ export const Proof: React.FC = () => {
           {/* Old way — months */}
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
-            opacity: interpolate(frame, [340, 355], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            opacity: interpolate(frame, [461, 476], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
             {/* Multiple calendar pages */}
             <div style={{ position: "relative", width: 130, height: 130 }}>
@@ -341,9 +349,9 @@ export const Proof: React.FC = () => {
               {/* Cross-out */}
               <svg width="130" height="130" viewBox="0 0 130 130" style={{ position: "absolute", top: 0, left: 0 }}>
                 <line x1="10" y1="10" x2="120" y2="120" stroke={theme.colors.accent} strokeWidth="3" opacity="0.7"
-                  strokeDasharray="155" strokeDashoffset={interpolate(frame, [360, 380], [155, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+                  strokeDasharray="155" strokeDashoffset={interpolate(frame, [481, 501], [155, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
                 <line x1="120" y1="10" x2="10" y2="120" stroke={theme.colors.accent} strokeWidth="3" opacity="0.7"
-                  strokeDasharray="155" strokeDashoffset={interpolate(frame, [365, 385], [155, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+                  strokeDasharray="155" strokeDashoffset={interpolate(frame, [486, 506], [155, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
               </svg>
             </div>
             <span style={{ fontSize: 24, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 3, textTransform: "uppercase", textDecoration: "line-through", textDecorationColor: theme.colors.accent }}>6+ Months</span>
@@ -352,7 +360,7 @@ export const Proof: React.FC = () => {
           {/* Arrow */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
             {[0, 1, 2].map(a => {
-              const arrowP = interpolate(frame, [370 + a * 6, 383 + a * 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) });
+              const arrowP = interpolate(frame, [491 + a * 6, 504 + a * 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) });
               return (
                 <svg key={a} width="50" height="24" viewBox="0 0 50 24" opacity={arrowP}>
                   <polygon points="0,4 35,4 35,0 50,12 35,24 35,20 0,20" fill={theme.colors.accent} opacity={0.3 + a * 0.2} />
@@ -364,7 +372,7 @@ export const Proof: React.FC = () => {
           {/* New way — weeks with rocket */}
           <div style={{
             display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
-            opacity: interpolate(frame, [375, 390], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            opacity: interpolate(frame, [496, 511], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
             {/* Single sprint calendar */}
             <div style={{ position: "relative" }}>
@@ -374,19 +382,19 @@ export const Proof: React.FC = () => {
                 <rect x="5" y="20" width="120" height="11" fill={theme.colors.green} opacity="0.7" />
                 {/* Sprint days highlighted */}
                 {Array.from({ length: 10 }).map((_, d) => {
-                  const dayP = interpolate(frame - 380, [d * 2, d * 2 + 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+                  const dayP = interpolate(frame - 501, [d * 2, d * 2 + 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
                   return <rect key={d} x={15 + (d % 5) * 22} y={42 + Math.floor(d / 5) * 28} width="16" height="18" rx="3"
                     fill={theme.colors.green} opacity={dayP * 0.6} />;
                 })}
                 {/* Checkmark at end */}
                 <path d="M80 88 L90 98 L110 75" fill="none" stroke={theme.colors.green} strokeWidth="3" strokeLinecap="round"
-                  opacity={interpolate(frame, [395, 405], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+                  opacity={interpolate(frame, [516, 526], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
               </svg>
               {/* Rocket */}
               <svg width="40" height="50" viewBox="0 0 40 50" style={{
                 position: "absolute", top: -20, right: -15,
                 transform: `rotate(-30deg) translateY(${-breatheY * 2}px)`,
-                opacity: interpolate(frame, [385, 395], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+                opacity: interpolate(frame, [506, 516], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
               }}>
                 <path d="M20 3 C12 3 8 18 8 30 L32 30 C32 18 28 3 20 3Z" fill={theme.colors.surface} stroke={theme.colors.textSecondary} strokeWidth="1.5" />
                 <path d="M20 3 C15 3 13 10 13 14 L27 14 C27 10 25 3 20 3Z" fill={theme.colors.accent} opacity="0.8" />

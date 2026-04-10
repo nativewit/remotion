@@ -46,7 +46,7 @@ export const Hook: React.FC = () => {
     easing: Easing.bezier(0.19, 1, 0.22, 1),
   });
 
-  const exitFade = interpolate(frame, [132, 150], [1, 0], {
+  const exitFade = interpolate(frame, [162, 180], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

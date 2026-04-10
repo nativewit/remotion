@@ -8,27 +8,28 @@ import { CTA } from "../scenes/CTA";
 
 /**
  * Scene durations in frames (all at 30 fps).
+ * Synced to voiceover transcript timestamps.
  *
  *   Scene              Frames   Seconds   VO span
  *   ────────────────   ──────   ───────   ────────
  *   Intro delay          30       1.0   silence / anticipation
- *   Hook                 150       5.0   00:01–00:06
- *   Problem              345      11.5   00:06–00:17.5
- *   Authority            390      13.0   00:17.5–00:30.5
- *   Proof                435      14.5   00:30.5–00:45
- *   Differentiator       645      21.5   00:45–01:06.5
- *   CTA                  375      12.5   01:06.5–01:19
+ *   Hook                 180       6.0   00:01–00:07
+ *   Problem              345      11.5   00:07–00:18.5
+ *   Authority            405      13.5   00:18.5–00:32
+ *   Proof                480      16.0   00:32–00:48
+ *   Differentiator       675      22.5   00:48–01:10.5
+ *   CTA                  375      12.5   01:10.5–01:23
  *                       ────     ─────
- *   Total               2370      79.0   (~1:19)
+ *   Total               2490      83.0   (~1:23)
  */
 export const INTRO_DELAY = 30; // 1 s at 30 fps
 
 export const SCENE_DURATIONS = {
-  hook: 150,
+  hook: 180,
   problem: 345,
-  authority: 390,
-  proof: 435,
-  differentiator: 645,
+  authority: 405,
+  proof: 480,
+  differentiator: 675,
   cta: 375,
 } as const;
 

@@ -32,7 +32,7 @@ export const Authority: React.FC = () => {
   const { fps } = useVideoConfig();
 
   const entryFade = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
-  const exitFade = interpolate(frame, [360, 390], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const exitFade = interpolate(frame, [375, 405], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   /* ── Logo + brand name ──────────────────────────────────── */
   const logoProgress = spring({ frame, fps, config: { damping: 100, mass: 0.5 } });
