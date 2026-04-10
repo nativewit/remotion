@@ -34,12 +34,6 @@ export const Problem: React.FC = () => {
   /* ── Character speed for animation ──────────────────────── */
   const charSpeed = interpolate(frame, [0, 60, 97, 158, 252, 345], [90, 85, 70, 30, 15, 5], { extrapolateRight: "clamp" });
 
-  /* ── Character running animation — always visible even at low speed ── */
-  const runFreq = 0.06 + (charSpeed / 100) * 0.12;   // 0.06 slow walk → 0.18 fast sprint
-  const runAmp  = 0.3  + (charSpeed / 100) * 0.7;    // always at least 0.3 amplitude
-  const runCycle = Math.sin(frame * runFreq) * runAmp;
-  const legAngle = runCycle * 25;
-
   /* ── Speed lines fade as character slows ───────────────── */
   const speedOpacity = interpolate(frame, [0, 97, 200], [0.8, 0.4, 0], { extrapolateRight: "clamp" });
 
@@ -167,54 +161,115 @@ export const Problem: React.FC = () => {
         );
       })}
 
-      {/* ── Running character (side-view, on top of line) ── */}
-      <div style={{ position: "absolute", top: "50%", left: `${charX}%`, transform: "translate(-50%, -84%)" }}>
-        <svg width="60" height="72" viewBox="0 0 60 72" style={{
-          filter: `drop-shadow(0 0 ${16 * (charSpeed / 100)}px ${theme.colors.accent}66)`,
-        }}>
-          {/* Head — round */}
-          <circle cx="34" cy="11" r="10" fill={theme.colors.accent} opacity="0.9" />
-          {/* Eye */}
-          <circle cx="39" cy="9" r="2" fill={theme.colors.bg} />
-          <circle cx="39.5" cy="8.5" r="0.8" fill={theme.colors.textPrimary} />
-          {/* Mouth */}
-          <path d="M37 15 Q40 16 39 14" fill="none" stroke={theme.colors.bg} strokeWidth="1.2" strokeLinecap="round" />
-          {/* Body — leaning forward when fast */}
-          <rect x="25" y="21" width="16" height="18" rx="4" fill={theme.colors.accent} opacity="0.8"
-            transform={`rotate(${interpolate(charSpeed, [0, 90], [0, -10])} 33 30)`} />
-          {/* Back arm */}
-          <line x1="28" y1="26" x2={24 + runCycle * 5} y2={38 + Math.abs(runCycle) * 5}
-            stroke={theme.colors.accent} strokeWidth="3.5" strokeLinecap="round" opacity="0.5" />
-          {/* Front arm */}
-          <line x1="38" y1="26" x2={44 - runCycle * 5} y2={34 - Math.abs(runCycle) * 6}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.75" />
-          {/* Back leg */}
-          <line x1="29" y1="39" x2={29 - Math.sin((legAngle * Math.PI) / 180) * 12}
-            y2={39 + Math.cos((legAngle * Math.PI) / 180) * 24}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.55" />
-          {/* Front leg */}
-          <line x1="37" y1="39" x2={37 + Math.sin((legAngle * Math.PI) / 180) * 12}
-            y2={39 + Math.cos((legAngle * Math.PI) / 180) * 24}
-            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.75" />
-          {/* Shoe on front leg */}
-          <ellipse cx={37 + Math.sin((legAngle * Math.PI) / 180) * 12 + 3}
-            cy={39 + Math.cos((legAngle * Math.PI) / 180) * 24 + 1}
-            rx="4" ry="2" fill={theme.colors.accent} opacity="0.8" />
-          {/* Speed hair blown back when fast */}
-          {charSpeed > 30 && (
-            <>
-              <path d={`M24 5 Q${20 - charSpeed * 0.04} 3 ${16 - charSpeed * 0.06} 7`}
-                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.5" opacity="0.5" />
-              <path d={`M23 9 Q${18 - charSpeed * 0.03} 8 ${14 - charSpeed * 0.05} 12`}
-                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.2" opacity="0.4" />
-            </>
-          )}
-          {/* Motion blur */}
-          {charSpeed > 50 && Array.from({ length: 3 }).map((_, k) => (
-            <line key={k} x1={8} y1={16 + k * 12} x2={8 - charSpeed * 0.12} y2={16 + k * 12}
-              stroke={theme.colors.accent} strokeWidth="1.5" strokeLinecap="round" opacity={0.12 + k * 0.04} />
-          ))}
-        </svg>
+      {/* ── Shadow silhouette character (side-view, on track line) ── */}
+      <div style={{ position: "absolute", top: "50%", left: `${charX}%`, transform: "translate(-50%, -100%) scaleX(-1)" }}>
+        {(() => {
+          const sc = theme.colors.accent;
+          const isRunning = charSpeed > 40;
+
+          // Single unified cycle — frequency scales smoothly with speed
+          const freq = 0.09 + (charSpeed / 100) * 0.09; // walk 0.09 → sprint 0.18
+          const t = frame * freq;
+          const cycle = Math.sin(t); // smooth pendulum −1..1
+
+          // Smooth bounce: raised cosine so it never has sharp V-dips
+          const bounce = ((1 - Math.cos(t * 2)) / 2) * (1.5 + (charSpeed / 100) * 3);
+
+          // Stride and arm — scale continuously with speed
+          const strideAmp = 18 + (charSpeed / 100) * 18; // 18° walk → 36° sprint
+          const stride    = cycle * strideAmp;
+          const armAmp    = 10 + (charSpeed / 100) * 14;
+          const armSwg    = -cycle * armAmp;
+
+          // Forward lean: straight when slow, leans forward when running
+          // Kicks in only above charSpeed 25, ramps to 12px at full sprint
+          // Character is rendered with scaleX(-1), so subtracting lean shifts upper body forward
+          const lean = interpolate(charSpeed, [25, 100], [0, 12], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+          // Geometry (scaled down ~30%)
+          const cx = 24;
+          const groundY = 62;
+          const hipY = groundY - 22 - bounce;
+          const shoulderY = hipY - 11;
+          const headCY = shoulderY - 7;
+          const ux = cx - lean; // upper-body x shifts forward with lean (negative = forward after scaleX(-1))
+
+          const TL = 11; const SL = 10; // thigh / shin
+          const AL = 8;  const FL = 7;  // upper-arm / forearm
+          const rad = (d: number) => (d * Math.PI) / 180;
+
+          // Smooth knee bend: raised cosine maps sine [-1,1] → [0,1] with no sharp transitions
+          const maxBend = 8 + (charSpeed / 100) * 18;  // walk 8° → sprint 26°
+          const fSB = ((1 + cycle) / 2) * maxBend;   // front shin bends when leg strides forward
+          const bSB = ((1 - cycle) / 2) * maxBend;   // back shin bends when leg strides back
+
+          // Front leg
+          const fKX = cx + Math.sin(rad(stride)) * TL;
+          const fKY = hipY + Math.cos(rad(stride)) * TL;
+          const fFX = fKX + Math.sin(rad(stride + fSB)) * SL;
+          const fFY = fKY + Math.cos(rad(stride + fSB)) * SL;
+
+          // Back leg
+          const bKX = cx + Math.sin(rad(-stride)) * TL;
+          const bKY = hipY + Math.cos(rad(-stride)) * TL;
+          const bFX = bKX + Math.sin(rad(-stride - bSB)) * SL;
+          const bFY = bKY + Math.cos(rad(-stride - bSB)) * SL;
+
+          // Front arm
+          const fEX = ux + Math.sin(rad(armSwg)) * AL;
+          const fEY = shoulderY + Math.cos(rad(armSwg)) * AL;
+          const forearmBend = 15 + (charSpeed / 100) * 15;  // 15° walk → 30° sprint
+          const fHX = fEX + Math.sin(rad(armSwg - forearmBend)) * FL;
+          const fHY = fEY + Math.cos(rad(armSwg - forearmBend)) * FL;
+
+          // Back arm
+          const bEX = ux + Math.sin(rad(-armSwg)) * AL;
+          const bEY = shoulderY + Math.cos(rad(-armSwg)) * AL;
+          const bHX = bEX + Math.sin(rad(-armSwg + 22)) * FL;
+          const bHY = bEY + Math.cos(rad(-armSwg + 22)) * FL;
+
+          const glow = isRunning && charSpeed > 50 ? (charSpeed / 100) * 14 : 0;
+
+          return (
+            <svg width="48" height="66" viewBox="0 0 48 66"
+              style={{ filter: glow > 0 ? `drop-shadow(0 0 ${glow}px ${sc}88)` : "none" }}>
+              {/* Ground shadow */}
+              <ellipse cx={cx} cy={groundY} rx={4 + (charSpeed / 100) * 4} ry="2"
+                fill={sc} opacity="0.15" />
+
+              {/* Back leg */}
+              <line x1={cx} y1={hipY} x2={bKX} y2={bKY}
+                stroke={sc} strokeWidth="3.5" strokeLinecap="round" opacity="0.38" />
+              <line x1={bKX} y1={bKY} x2={bFX} y2={bFY}
+                stroke={sc} strokeWidth="3" strokeLinecap="round" opacity="0.38" />
+
+              {/* Back arm */}
+              <line x1={ux} y1={shoulderY} x2={bEX} y2={bEY}
+                stroke={sc} strokeWidth="2.5" strokeLinecap="round" opacity="0.38" />
+              <line x1={bEX} y1={bEY} x2={bHX} y2={bHY}
+                stroke={sc} strokeWidth="2" strokeLinecap="round" opacity="0.38" />
+
+              {/* Torso */}
+              <line x1={ux} y1={shoulderY} x2={cx} y2={hipY}
+                stroke={sc} strokeWidth="6" strokeLinecap="round" opacity="0.88" />
+
+              {/* Head */}
+              <circle cx={ux} cy={headCY} r="6" fill={sc} opacity="0.9" />
+
+              {/* Front leg */}
+              <line x1={cx} y1={hipY} x2={fKX} y2={fKY}
+                stroke={sc} strokeWidth="4" strokeLinecap="round" opacity="0.9" />
+              <line x1={fKX} y1={fKY} x2={fFX} y2={fFY}
+                stroke={sc} strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
+
+              {/* Front arm */}
+              <line x1={ux} y1={shoulderY} x2={fEX} y2={fEY}
+                stroke={sc} strokeWidth="3" strokeLinecap="round" opacity="0.9" />
+              <line x1={fEX} y1={fEY} x2={fHX} y2={fHY}
+                stroke={sc} strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
+            </svg>
+          );
+        })()}
       </div>
 
       {/* ── Wall 1: Complexity ────────────────────────────── */}
