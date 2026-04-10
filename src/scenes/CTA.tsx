@@ -34,9 +34,15 @@ export const CTA: React.FC = () => {
   const logoScale = interpolate(logoProgress, [0, 1], [0.85, 1]);
 
   /* ── Phase 1: "Building something that matters" (f15-77) ─ */
-  const buildReveal = interpolate(frame, [15, 37], [0, 1], {
+  const buildReveal = interpolate(frame, [15, 50], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.bezier(0.16, 1, 0.3, 1),
+  });
+  const buildSlideY = interpolate(frame, [15, 50], [50, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.bezier(0.16, 1, 0.3, 1),
   });
   const buildFade = interpolate(frame, [70, 84], [1, 0], {
     extrapolateLeft: "clamp",
@@ -195,6 +201,7 @@ export const CTA: React.FC = () => {
             alignItems: "center",
             gap: 16,
             opacity: buildReveal * buildFade,
+            transform: `translateY(${buildSlideY}px)`,
           }}
         >
           {/* Abstract assembling structure */}
