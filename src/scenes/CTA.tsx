@@ -189,11 +189,11 @@ export const CTA: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "30%",
+            top: "26%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 12,
+            gap: 16,
             opacity: buildReveal * buildFade,
           }}
         >
@@ -234,6 +234,9 @@ export const CTA: React.FC = () => {
               borderRadius: 1,
             }}
           />
+          <span style={{ fontSize: 22, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 3, textTransform: "uppercase", marginTop: 8 }}>
+            Building something that matters?
+          </span>
         </div>
       )}
 
@@ -347,6 +350,28 @@ export const CTA: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Trust indicators */}
+      {frame > 160 && (
+        <div style={{
+          position: "absolute", bottom: "8%", display: "flex", alignItems: "center", gap: 40,
+          opacity: interpolate(frame, [160, 185], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        }}>
+          {[
+            { icon: "🚀", text: "FAST DELIVERY" },
+            { icon: "🤝", text: "CO-FOUNDER APPROACH" },
+            { icon: "🧠", text: "AI-FIRST" },
+          ].map((item, i) => (
+            <div key={i} style={{
+              display: "flex", alignItems: "center", gap: 8,
+              opacity: interpolate(frame, [165 + i * 12, 180 + i * 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            }}>
+              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 2 }}>{item.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <RobotGuide frame={frame} x={92} y={88} scale={0.55} expression="waving" />
     </AbsoluteFill>

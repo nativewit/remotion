@@ -116,11 +116,11 @@ export const Problem: React.FC = () => {
           display: "flex", alignItems: "center", gap: 16,
           opacity: founderReveal * labelsFade, transform: `translateY(${breatheY}px)`,
         }}>
-          <svg width="52" height="52" viewBox="0 0 52 52" style={{ filter: `drop-shadow(0 0 10px ${theme.colors.accent}44)` }}>
+          <svg width="64" height="64" viewBox="0 0 52 52" style={{ filter: `drop-shadow(0 0 12px ${theme.colors.accent}44)` }}>
             <circle cx="26" cy="14" r="10" fill={theme.colors.accent} opacity="0.7" />
             <path d="M6 48 Q6 30 26 26 Q46 30 46 48" fill={theme.colors.accent} opacity="0.5" />
           </svg>
-          <span style={{ fontSize: 36, fontWeight: 900, color: theme.colors.textPrimary, letterSpacing: 3, textTransform: "uppercase" }}>Founder</span>
+          <span style={{ fontSize: 44, fontWeight: 900, color: theme.colors.textPrimary, letterSpacing: 4, textTransform: "uppercase" }}>Founder</span>
         </div>
       )}
       {leadReveal > 0 && (
@@ -129,13 +129,13 @@ export const Problem: React.FC = () => {
           display: "flex", alignItems: "center", gap: 16,
           opacity: leadReveal * labelsFade, transform: `translateY(${breatheY}px)`,
         }}>
-          <svg width="52" height="52" viewBox="0 0 52 52" style={{ filter: `drop-shadow(0 0 10px ${theme.colors.blue}44)` }}>
+          <svg width="64" height="64" viewBox="0 0 52 52" style={{ filter: `drop-shadow(0 0 12px ${theme.colors.blue}44)` }}>
             <circle cx="26" cy="14" r="10" fill={theme.colors.blue} opacity="0.7" />
             <path d="M6 48 Q6 30 26 26 Q46 30 46 48" fill={theme.colors.blue} opacity="0.5" />
             {/* Briefcase */}
             <rect x="14" y="32" width="24" height="14" rx="3" fill={theme.colors.blue} opacity="0.3" />
           </svg>
-          <span style={{ fontSize: 36, fontWeight: 900, color: theme.colors.textPrimary, letterSpacing: 3, textTransform: "uppercase" }}>Product Lead</span>
+          <span style={{ fontSize: 44, fontWeight: 900, color: theme.colors.textPrimary, letterSpacing: 4, textTransform: "uppercase" }}>Product Lead</span>
         </div>
       )}
 
@@ -165,48 +165,65 @@ export const Problem: React.FC = () => {
         );
       })}
 
-      {/* ── Running character (replaces dot/orb) ─────────── */}
+      {/* ── Running character (side-view) ───────────────── */}
       <div style={{ position: "absolute", top: "50%", left: `${charX}%`, transform: "translate(-50%, -50%)" }}>
-        <svg width="60" height="80" viewBox="0 0 60 80" style={{
+        <svg width="70" height="80" viewBox="0 0 70 80" style={{
           filter: `drop-shadow(0 0 ${20 * (charSpeed / 100)}px ${theme.colors.accent}66)`,
         }}>
-          {/* Head */}
-          <circle cx="30" cy="12" r="10" fill={theme.colors.accent} opacity="0.9" />
-          {/* Eyes */}
-          <circle cx="26" cy="10" r="2" fill={theme.colors.bg} />
-          <circle cx="34" cy="10" r="2" fill={theme.colors.bg} />
-          {/* Body */}
-          <rect x="20" y="22" width="20" height="24" rx="5" fill={theme.colors.accent} opacity="0.8" />
-          {/* Arms */}
-          <line x1="20" y1="28" x2={10 + runCycle * 5} y2={40 - Math.abs(runCycle) * 8}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.7" />
-          <line x1="40" y1="28" x2={50 - runCycle * 5} y2={40 + Math.abs(runCycle) * 8}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.7" />
-          {/* Left leg */}
-          <line x1="25" y1="46" x2={25 + Math.sin((legAngle * Math.PI) / 180) * 12}
-            y2={46 + Math.cos((legAngle * Math.PI) / 180) * 20}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.7" />
-          {/* Right leg */}
-          <line x1="35" y1="46" x2={35 - Math.sin((legAngle * Math.PI) / 180) * 12}
-            y2={46 + Math.cos((legAngle * Math.PI) / 180) * 20}
-            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.7" />
-          {/* Speed cap / hair blown back when fast */}
-          {charSpeed > 40 && (
-            <path d={`M20 8 Q${15 - charSpeed * 0.08} 5 ${12 - charSpeed * 0.1} 10`}
-              fill="none" stroke={theme.colors.accentSoft} strokeWidth="2" opacity="0.6" />
+          {/* Head — side view */}
+          <ellipse cx="38" cy="12" rx="11" ry="10" fill={theme.colors.accent} opacity="0.9" />
+          {/* Eye */}
+          <circle cx="44" cy="10" r="2.5" fill={theme.colors.bg} />
+          <circle cx="45" cy="9.5" r="1" fill={theme.colors.textPrimary} />
+          {/* Mouth */}
+          <path d="M44 16 Q47 17 46 15" fill="none" stroke={theme.colors.bg} strokeWidth="1.5" strokeLinecap="round" />
+          {/* Torso — leaning forward when fast */}
+          <rect x="24" y="22" width="18" height="22" rx="5" fill={theme.colors.accent} opacity="0.8"
+            transform={`rotate(${interpolate(charSpeed, [0, 90], [0, -12])} 33 33)`} />
+          {/* Back arm (behind torso) */}
+          <line x1="28" y1="28" x2={22 + runCycle * 6} y2={42 + Math.abs(runCycle) * 6}
+            stroke={theme.colors.accent} strokeWidth="4" strokeLinecap="round" opacity="0.5" />
+          {/* Front arm (pumping) */}
+          <line x1="38" y1="28" x2={48 - runCycle * 6} y2={38 - Math.abs(runCycle) * 8}
+            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.75" />
+          {/* Back leg */}
+          <line x1="28" y1="44" x2={28 - Math.sin((legAngle * Math.PI) / 180) * 14}
+            y2={44 + Math.cos((legAngle * Math.PI) / 180) * 22}
+            stroke={theme.colors.accent} strokeWidth="4.5" strokeLinecap="round" opacity="0.55" />
+          {/* Front leg */}
+          <line x1="36" y1="44" x2={36 + Math.sin((legAngle * Math.PI) / 180) * 14}
+            y2={44 + Math.cos((legAngle * Math.PI) / 180) * 22}
+            stroke={theme.colors.accent} strokeWidth="5" strokeLinecap="round" opacity="0.75" />
+          {/* Shoe on front leg */}
+          <ellipse cx={36 + Math.sin((legAngle * Math.PI) / 180) * 14 + 3}
+            cy={44 + Math.cos((legAngle * Math.PI) / 180) * 22 + 1}
+            rx="5" ry="2.5" fill={theme.colors.accent} opacity="0.8" />
+          {/* Speed hair blown back when fast */}
+          {charSpeed > 30 && (
+            <>
+              <path d={`M28 6 Q${22 - charSpeed * 0.06} 3 ${18 - charSpeed * 0.08} 8`}
+                fill="none" stroke={theme.colors.accentSoft} strokeWidth="2" opacity="0.5" />
+              <path d={`M27 10 Q${20 - charSpeed * 0.05} 9 ${16 - charSpeed * 0.07} 13`}
+                fill="none" stroke={theme.colors.accentSoft} strokeWidth="1.5" opacity="0.4" />
+            </>
           )}
+          {/* Motion blur streaks */}
+          {charSpeed > 50 && Array.from({ length: 3 }).map((_, k) => (
+            <line key={k} x1={10} y1={20 + k * 14} x2={10 - charSpeed * 0.15} y2={20 + k * 14}
+              stroke={theme.colors.accent} strokeWidth="1.5" strokeLinecap="round" opacity={0.15 + k * 0.05} />
+          ))}
         </svg>
       </div>
 
       {/* ── Wall 1: Complexity ────────────────────────────── */}
       <div style={{
-        position: "absolute", top: "22%", left: "55%", width: 6, height: `${56 * wall1}%`,
+        position: "absolute", top: "30%", left: "55%", width: 4, height: `${40 * wall1}%`,
         background: `linear-gradient(to bottom, ${theme.colors.accent}cc, ${theme.colors.accent}22)`, borderRadius: 3,
       }} />
       {wall1 > 0.5 && (
-        <div style={{ position: "absolute", top: "5%", left: "52%", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, opacity: wall1 }}>
-          <div style={{ position: "relative", width: 130, height: 130 }}>
-            <svg width="130" height="130" viewBox="0 0 130 130" style={{ filter: `drop-shadow(0 0 16px ${theme.colors.textMuted}33)` }}>
+        <div style={{ position: "absolute", top: "5%", left: "50%", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, opacity: wall1 }}>
+          <div style={{ position: "relative", width: 160, height: 160 }}>
+            <svg width="160" height="160" viewBox="0 0 130 130" style={{ filter: `drop-shadow(0 0 20px ${theme.colors.textMuted}44)` }}>
               <g style={{ transform: `rotate(${frame * 1.2}deg)`, transformOrigin: "55px 55px" }}>
                 <circle cx="55" cy="55" r="28" fill="none" stroke={theme.colors.textMuted} strokeWidth="3" />
                 <circle cx="55" cy="55" r="12" fill={theme.colors.textMuted} opacity="0.6" />
@@ -223,23 +240,23 @@ export const Problem: React.FC = () => {
               </g>
             </svg>
           </div>
-          <span style={{ fontSize: 26, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 4, textTransform: "uppercase" }}>Complexity</span>
+          <span style={{ fontSize: 32, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 5, textTransform: "uppercase" }}>Complexity</span>
         </div>
       )}
 
       {/* ── Wall 2: Wrong Partner ────────────────────────── */}
       <div style={{
-        position: "absolute", top: "20%", left: "72%", width: 6, height: `${60 * wall2}%`,
+        position: "absolute", top: "28%", left: "72%", width: 4, height: `${42 * wall2}%`,
         background: `linear-gradient(to bottom, ${theme.colors.accent}, ${theme.colors.accent}22)`, borderRadius: 3,
       }} />
       {wall2 > 0.5 && (
-        <div style={{ position: "absolute", top: "3%", left: "70%", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, opacity: wall2 }}>
-          <svg width="120" height="120" viewBox="0 0 120 120" style={{ filter: `drop-shadow(0 0 16px ${theme.colors.accent}44)` }}>
+        <div style={{ position: "absolute", top: "3%", left: "68%", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, opacity: wall2 }}>
+          <svg width="150" height="150" viewBox="0 0 120 120" style={{ filter: `drop-shadow(0 0 20px ${theme.colors.accent}55)` }}>
             <path d="M60 10 L110 100 L10 100 Z" fill="none" stroke={theme.colors.accent} strokeWidth="3" strokeLinejoin="round" opacity="0.6" />
             <rect x="56" y="45" width="8" height="28" rx="4" fill={theme.colors.accent} opacity="0.9" />
             <circle cx="60" cy="82" r="5" fill={theme.colors.accent} opacity="0.9" />
           </svg>
-          <span style={{ fontSize: 26, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 4, textTransform: "uppercase" }}>Wrong partner</span>
+          <span style={{ fontSize: 32, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 5, textTransform: "uppercase" }}>Wrong partner</span>
         </div>
       )}
 

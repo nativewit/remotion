@@ -75,15 +75,65 @@ export const Differentiator: React.FC = () => {
           <span style={{ fontSize: 42, fontWeight: 900, color: theme.colors.accent, letterSpacing: 4, textTransform: "uppercase" }}>
             What makes us different
           </span>
+          {/* Floating keyword badges */}
+          {["STRATEGY", "DESIGN", "AI", "SCALE"].map((kw, i) => {
+            const kwP = interpolate(frame, [8 + i * 7, 18 + i * 7], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const positions = [{ x: -380, y: -60 }, { x: 320, y: -50 }, { x: -340, y: 80 }, { x: 360, y: 70 }];
+            return (
+              <div key={kw} style={{
+                position: "absolute", left: `calc(50% + ${positions[i].x}px)`, top: `calc(50% + ${positions[i].y}px)`,
+                padding: "8px 20px", borderRadius: 20, background: `${theme.colors.accent}12`, border: `1.5px solid ${theme.colors.accent}33`,
+                opacity: kwP * 0.7, transform: `translateY(${Math.sin((frame + i * 20) * 0.06) * 6}px)`,
+              }}>
+                <span style={{ fontSize: 14, fontWeight: 800, color: theme.colors.accent, letterSpacing: 3 }}>{kw}</span>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Gear + "How we think" */}
+        {/* Gear + "How we think" with surrounding circuit lines */}
         <div style={{
           display: "flex", flexDirection: "column", alignItems: "center",
           opacity: interpolate(frame, [55, 80], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           transform: `scale(${interpolate(frame, [55, 80], [0.85, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) })})`,
         }}>
-          <div style={{ width: 150, height: 150, position: "relative", marginBottom: 32 }}>
+          <div style={{ position: "relative", width: 600, height: 380, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {/* Circuit lines radiating from gear */}
+            <svg width="600" height="380" viewBox="0 0 600 380" style={{ position: "absolute", top: 0, left: 0 }}>
+              {[
+                { x1: 300, y1: 160, x2: 80, y2: 60 }, { x1: 300, y1: 160, x2: 520, y2: 60 },
+                { x1: 300, y1: 160, x2: 80, y2: 280 }, { x1: 300, y1: 160, x2: 520, y2: 280 },
+                { x1: 300, y1: 160, x2: 80, y2: 160 }, { x1: 300, y1: 160, x2: 520, y2: 160 },
+              ].map((l, i) => {
+                const lineP = interpolate(frame, [60 + i * 4, 85 + i * 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+                return (
+                  <g key={`cl-${i}`}>
+                    <line x1={l.x1} y1={l.y1} x2={l.x1 + (l.x2 - l.x1) * lineP} y2={l.y1 + (l.y2 - l.y1) * lineP}
+                      stroke={theme.colors.accent} strokeWidth="1" opacity="0.15" />
+                    {lineP > 0.9 && <circle cx={l.x2} cy={l.y2} r="4" fill={theme.colors.accent} opacity="0.3" />}
+                  </g>
+                );
+              })}
+            </svg>
+            {/* Floating concept nodes at circuit endpoints */}
+            {[
+              { label: "Product\nThinking", x: 35, y: 25, icon: "💡" },
+              { label: "System\nDesign", x: 490, y: 25, icon: "🔧" },
+              { label: "User\nFocus", x: 35, y: 255, icon: "👁" },
+              { label: "Speed", x: 490, y: 255, icon: "⚡" },
+            ].map((node, i) => {
+              const nodeP = interpolate(frame, [75 + i * 6, 95 + i * 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+              return (
+                <div key={node.label} style={{
+                  position: "absolute", left: node.x, top: node.y, display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+                  opacity: nodeP, transform: `scale(${interpolate(nodeP, [0, 1], [0.7, 1])}) translateY(${Math.sin((frame + i * 25) * 0.05) * 4}px)`,
+                }}>
+                  <span style={{ fontSize: 26 }}>{node.icon}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: theme.colors.textMuted, textAlign: "center", whiteSpace: "pre-line", letterSpacing: 1.5, textTransform: "uppercase" }}>{node.label}</span>
+                </div>
+              );
+            })}
+            {/* Center gear */}
             <svg width="200" height="200" viewBox="0 0 150 150" style={{ transform: `rotate(${frame * 0.5}deg)` }}>
               {Array.from({ length: 16 }).map((_, i) => {
                 const angle = (i / 16) * Math.PI * 2;
@@ -109,7 +159,7 @@ export const Differentiator: React.FC = () => {
               <circle cx="75" cy="75" r={8 + Math.sin(frame * 0.12) * 2} fill={theme.colors.accent} opacity={0.8} />
             </svg>
           </div>
-          <span style={{ fontSize: 36, fontWeight: 900, color: theme.colors.accent, letterSpacing: 4, textTransform: "uppercase", transform: `translateY(${breatheY}px)` }}>
+          <span style={{ fontSize: 36, fontWeight: 900, color: theme.colors.accent, letterSpacing: 4, textTransform: "uppercase", transform: `translateY(${breatheY}px)`, marginTop: -20 }}>
             How we think
           </span>
         </div>
@@ -135,12 +185,44 @@ export const Differentiator: React.FC = () => {
           <text x="350" y="48" textAnchor="middle" fill={theme.colors.accent} fontSize="14" fontWeight="700" letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.25, 0.4], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}>API GATEWAY</text>
 
+          {/* Mini person on API Gateway — placing block */}
+          {blueprintDraw > 0.35 && (() => {
+            const pWalk = interpolate(blueprintDraw, [0.35, 0.55], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const px = 220 + pWalk * 40;
+            return (
+              <g transform={`translate(${px}, -2)`} opacity={interpolate(pWalk, [0, 0.1, 0.8, 1], [0, 0.7, 0.7, 0])}>
+                <circle cx="8" cy="4" r="5" fill={theme.colors.accent} opacity="0.6" />
+                <line x1="8" y1="9" x2="8" y2="22" stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.5" />
+                <line x1="8" y1="13" x2={2 + Math.sin(frame * 0.15) * 3} y2="18" stroke={theme.colors.accent} strokeWidth="1.2" opacity="0.5" />
+                <line x1="8" y1="13" x2={14 - Math.sin(frame * 0.15) * 3} y2="18" stroke={theme.colors.accent} strokeWidth="1.2" opacity="0.5" />
+                <line x1="8" y1="22" x2={4 + Math.sin(frame * 0.12) * 2} y2="30" stroke={theme.colors.accent} strokeWidth="1.2" opacity="0.5" />
+                <line x1="8" y1="22" x2={12 - Math.sin(frame * 0.12) * 2} y2="30" stroke={theme.colors.accent} strokeWidth="1.2" opacity="0.5" />
+                <rect x="0" y="-3" width="10" height="7" rx="1.5" fill={theme.colors.accent} opacity="0.35" />
+              </g>
+            );
+          })()}
+
           {/* Frontend */}
           <rect x="50" y="160" width="160" height="60" rx="8"
             fill={`${theme.colors.blue}${Math.round(interpolate(blueprintDraw, [0.4, 0.6], [0, 10], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })).toString(16).padStart(2, "0")}`}
             stroke={theme.colors.blue} strokeWidth="2" strokeDasharray="380" strokeDashoffset={380 - blueprintDraw * 380} />
           <text x="130" y="188" textAnchor="middle" fill={theme.colors.blue} fontSize="14" fontWeight="700" letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}>FRONTEND</text>
+
+          {/* Mini person on Frontend — hammering */}
+          {blueprintDraw > 0.45 && (() => {
+            const pOp = interpolate(blueprintDraw, [0.45, 0.55], [0, 0.7], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            return (
+              <g transform="translate(28, 140)" opacity={pOp}>
+                <circle cx="10" cy="4" r="5" fill={theme.colors.blue} opacity="0.6" />
+                <line x1="10" y1="9" x2="10" y2="22" stroke={theme.colors.blue} strokeWidth="1.5" opacity="0.5" />
+                <line x1="10" y1="14" x2={4 + Math.sin(frame * 0.2) * 4} y2={10} stroke={theme.colors.blue} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="14" x2="18" y2="18" stroke={theme.colors.blue} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="6" y2="30" stroke={theme.colors.blue} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="14" y2="30" stroke={theme.colors.blue} strokeWidth="1.2" opacity="0.5" />
+              </g>
+            );
+          })()}
 
           {/* Backend */}
           <rect x="270" y="160" width="160" height="60" rx="8"
@@ -149,12 +231,44 @@ export const Differentiator: React.FC = () => {
           <text x="350" y="188" textAnchor="middle" fill={theme.colors.green} fontSize="14" fontWeight="700" letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}>BACKEND</text>
 
+          {/* Mini person on Backend — typing */}
+          {blueprintDraw > 0.5 && (() => {
+            const pOp = interpolate(blueprintDraw, [0.5, 0.6], [0, 0.7], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            return (
+              <g transform="translate(438, 148)" opacity={pOp}>
+                <circle cx="10" cy="4" r="5" fill={theme.colors.green} opacity="0.6" />
+                <line x1="10" y1="9" x2="10" y2="22" stroke={theme.colors.green} strokeWidth="1.5" opacity="0.5" />
+                <line x1="10" y1="14" x2="3" y2="19" stroke={theme.colors.green} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="14" x2="17" y2="19" stroke={theme.colors.green} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="6" y2="30" stroke={theme.colors.green} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="14" y2="30" stroke={theme.colors.green} strokeWidth="1.2" opacity="0.5" />
+              </g>
+            );
+          })()}
+
           {/* Services */}
           <rect x="490" y="160" width="160" height="60" rx="8"
             fill={`#8b5cf6${Math.round(interpolate(blueprintDraw, [0.4, 0.6], [0, 10], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })).toString(16).padStart(2, "0")}`}
             stroke="#8b5cf6" strokeWidth="2" strokeDasharray="380" strokeDashoffset={380 - blueprintDraw * 380} />
           <text x="570" y="188" textAnchor="middle" fill="#8b5cf6" fontSize="14" fontWeight="700" letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.35, 0.5], [0, 0.8], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}>SERVICES</text>
+
+          {/* Mini person on Services — pushing gear */}
+          {blueprintDraw > 0.55 && (() => {
+            const pOp = interpolate(blueprintDraw, [0.55, 0.65], [0, 0.7], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            return (
+              <g transform="translate(656, 140)" opacity={pOp}>
+                <circle cx="10" cy="4" r="5" fill="#8b5cf6" opacity="0.6" />
+                <line x1="10" y1="9" x2="10" y2="22" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.5" />
+                <line x1="10" y1="14" x2="4" y2="19" stroke="#8b5cf6" strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="14" x2={16 + Math.sin(frame * 0.15) * 3} y2={11} stroke="#8b5cf6" strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="6" y2="30" stroke="#8b5cf6" strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="14" y2="30" stroke="#8b5cf6" strokeWidth="1.2" opacity="0.5" />
+                {/* Small gear being pushed */}
+                <circle cx="22" cy="10" r="5" fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.5" style={{ transform: `rotate(${frame * 2}deg)`, transformOrigin: "22px 10px" }} />
+              </g>
+            );
+          })()}
 
           {/* Connecting lines */}
           <line x1="350" y1="80" x2="130" y2="160" stroke={theme.colors.border} strokeWidth="1.5" strokeDasharray="300" strokeDashoffset={300 - blueprintDraw * 300} />
@@ -186,6 +300,25 @@ export const Differentiator: React.FC = () => {
           <text x="350" y="370" textAnchor="middle" fill={theme.colors.textMuted} fontSize="16" fontWeight="700" letterSpacing="2"
             opacity={interpolate(blueprintDraw, [0.6, 0.75], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}>DATABASE</text>
           <line x1="350" y1="220" x2="350" y2="295" stroke={theme.colors.border} strokeWidth="1.5" strokeDasharray="80" strokeDashoffset={80 - blueprintDraw * 80} />
+
+          {/* Mini person near DB — checking data */}
+          {blueprintDraw > 0.65 && (() => {
+            const pOp = interpolate(blueprintDraw, [0.65, 0.75], [0, 0.7], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            return (
+              <g transform="translate(420, 310)" opacity={pOp}>
+                <circle cx="10" cy="4" r="5" fill={theme.colors.textMuted} opacity="0.6" />
+                <line x1="10" y1="9" x2="10" y2="22" stroke={theme.colors.textMuted} strokeWidth="1.5" opacity="0.5" />
+                <line x1="10" y1="14" x2="4" y2="19" stroke={theme.colors.textMuted} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="14" x2="16" y2="19" stroke={theme.colors.textMuted} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="6" y2="30" stroke={theme.colors.textMuted} strokeWidth="1.2" opacity="0.5" />
+                <line x1="10" y1="22" x2="14" y2="30" stroke={theme.colors.textMuted} strokeWidth="1.2" opacity="0.5" />
+                {/* Clipboard */}
+                <rect x="18" y="10" width="8" height="10" rx="1" fill="none" stroke={theme.colors.textMuted} strokeWidth="0.8" opacity="0.5" />
+                <line x1="20" y1="14" x2="24" y2="14" stroke={theme.colors.textMuted} strokeWidth="0.6" opacity="0.4" />
+                <line x1="20" y1="16" x2="24" y2="16" stroke={theme.colors.textMuted} strokeWidth="0.6" opacity="0.4" />
+              </g>
+            );
+          })()}
         </svg>
 
         {/* Label */}
@@ -201,59 +334,121 @@ export const Differentiator: React.FC = () => {
       </div>
 
       {/* ═══ PHASE 3: Co-founder + Hard Questions ═══ */}
-      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 40, opacity: phase3 }}>
-        {/* Partnership Venn diagram with infographic icons */}
-        <div style={{ position: "relative", width: 700, height: 400, zIndex: 1 }}>
-          {/* Left circle — YOU */}
-          <div style={{
-            position: "absolute", left: 30, top: 30, width: 300, height: 300, borderRadius: "50%",
-            background: `${theme.colors.textSecondary}10`, border: `3px solid ${theme.colors.textSecondary}44`,
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            opacity: interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-            transform: `translateX(${interpolate(interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }), [0, 1], [40, 0])}px)`,
-          }}>
-            {/* Person icon */}
-            <svg width="60" height="60" viewBox="0 0 60 60" style={{ marginLeft: -60 }}>
-              <circle cx="30" cy="18" r="12" fill={theme.colors.textSecondary} opacity="0.6" />
-              <path d="M8 55 Q8 35 30 30 Q52 35 52 55" fill={theme.colors.textSecondary} opacity="0.4" />
-            </svg>
-            <span style={{ fontSize: 34, fontWeight: 900, color: theme.colors.textSecondary, letterSpacing: 3, textTransform: "uppercase", marginLeft: -60, marginTop: 8 }}>YOU</span>
-          </div>
+      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30, opacity: phase3 }}>
+        {/* Shared workspace: two people at one desk, shared screen */}
+        <div style={{ position: "relative", width: 800, height: 400, zIndex: 1 }}>
 
-          {/* Right circle — NATIVEWIT */}
+          {/* Desk / Table */}
           <div style={{
-            position: "absolute", left: 370, top: 30, width: 300, height: 300, borderRadius: "50%",
-            background: `${theme.colors.accent}10`, border: `3px solid ${theme.colors.accent}44`,
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            opacity: interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.19, 1, 0.22, 1) }),
-            transform: `translateX(${interpolate(interpolate(frame, [288, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }), [0, 1], [-40, 0])}px)`,
-          }}>
-            {/* Code/rocket icon */}
-            <svg width="60" height="60" viewBox="0 0 60 60" style={{ marginRight: -60 }}>
-              <text x="30" y="28" textAnchor="middle" fill={theme.colors.accent} fontSize="24" fontWeight="900" opacity="0.7">{"</>"}</text>
-              <circle cx="30" cy="45" r="8" fill={theme.colors.accent} opacity="0.4" />
-            </svg>
-            <span style={{ fontSize: 30, fontWeight: 900, color: theme.colors.accent, letterSpacing: 3, textTransform: "uppercase", marginRight: -60, marginTop: 8 }}>NATIVEWIT</span>
-          </div>
-
-          {/* Overlap glow + handshake */}
-          <div style={{
-            position: "absolute", left: 290, top: 60, width: 120, height: 240, borderRadius: "50%",
-            background: `radial-gradient(circle, ${theme.colors.accent}30, transparent)`,
-            opacity: interpolate(frame, [310, 335], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            position: "absolute", bottom: 50, left: "50%", transform: "translateX(-50%)", width: 600, height: 8, borderRadius: 4,
+            background: `linear-gradient(90deg, ${theme.colors.textMuted}33, ${theme.colors.textSecondary}55, ${theme.colors.textMuted}33)`,
+            opacity: interpolate(frame, [290, 310], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }} />
+
+          {/* Shared monitor in center */}
           <div style={{
-            position: "absolute", left: 320, top: 145,
-            opacity: interpolate(frame, [320, 340], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
-            transform: `scale(${1 + breathe * 0.05})`,
+            position: "absolute", top: 30, left: "50%", transform: "translateX(-50%)",
+            opacity: interpolate(frame, [295, 315], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
-            <svg width="60" height="60" viewBox="0 0 60 60">
-              <path d="M8 35 L20 25 L30 30 L40 25 L52 35" fill="none" stroke={theme.colors.accent} strokeWidth="3" strokeLinecap="round" />
-              <circle cx="20" cy="25" r="3" fill={theme.colors.accent} opacity="0.7" />
-              <circle cx="40" cy="25" r="3" fill={theme.colors.accent} opacity="0.7" />
-              <circle cx="30" cy="18" r="2" fill={theme.colors.accent} opacity={0.5 + Math.sin(frame * 0.15) * 0.5} />
+            <svg width="200" height="150" viewBox="0 0 200 150">
+              <rect x="10" y="5" width="180" height="110" rx="8" fill={theme.colors.surface} stroke={theme.colors.textSecondary} strokeWidth="2" />
+              {/* Screen content — code lines */}
+              {Array.from({ length: 5 }).map((_, l) => {
+                const lineP = interpolate(frame, [310 + l * 4, 320 + l * 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+                const widths = [90, 70, 110, 55, 85];
+                return <rect key={l} x="25" y={22 + l * 16} width={widths[l] * lineP} height="6" rx="2"
+                  fill={l === 2 ? theme.colors.green : theme.colors.accent} opacity={l === 2 ? 0.5 : 0.2} />;
+              })}
+              {/* Cursor blink */}
+              <rect x={25 + ((frame * 1.2) % 110)} y={22 + (Math.floor((frame * 0.08) % 5)) * 16} width="2" height="10" rx="1"
+                fill={theme.colors.accent} opacity={Math.sin(frame * 0.2) > 0 ? 0.7 : 0} />
+              {/* Monitor stand */}
+              <rect x="90" y="115" width="20" height="15" fill={theme.colors.textMuted} opacity="0.3" />
+              <rect x="70" y="130" width="60" height="5" rx="2" fill={theme.colors.textMuted} opacity="0.3" />
             </svg>
           </div>
+
+          {/* Left person — "YOU" with laptop */}
+          <div style={{
+            position: "absolute", left: 80, bottom: 60,
+            opacity: interpolate(frame, [300, 318], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            transform: `translateX(${interpolate(frame, [300, 318], [-30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
+          }}>
+            <svg width="100" height="150" viewBox="0 0 100 150">
+              {/* Head */}
+              <circle cx="50" cy="25" r="18" fill={theme.colors.textSecondary} opacity="0.5" />
+              <circle cx="44" cy="22" r="2" fill={theme.colors.bg} opacity="0.7" />
+              <path d="M42 30 Q50 35 58 30" fill="none" stroke={theme.colors.bg} strokeWidth="1.5" opacity="0.5" />
+              {/* Body */}
+              <rect x="35" y="43" width="30" height="45" rx="6" fill={theme.colors.textSecondary} opacity="0.3" />
+              {/* Arms reaching to desk */}
+              <line x1="35" y1="55" x2="15" y2="75" stroke={theme.colors.textSecondary} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              <line x1="65" y1="55" x2="85" y2="75" stroke={theme.colors.textSecondary} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              {/* Laptop */}
+              <rect x="10" y="78" width="45" height="28" rx="3" fill={theme.colors.surface} stroke={theme.colors.textSecondary} strokeWidth="1.5" opacity="0.6" />
+              <rect x="8" y="106" width="50" height="4" rx="2" fill={theme.colors.textSecondary} opacity="0.3" />
+              {/* Legs */}
+              <line x1="42" y1="88" x2="35" y2="120" stroke={theme.colors.textSecondary} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              <line x1="58" y1="88" x2="65" y2="120" stroke={theme.colors.textSecondary} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+            </svg>
+            <div style={{ textAlign: "center", marginTop: 4 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: theme.colors.textSecondary, letterSpacing: 3, textTransform: "uppercase" }}>YOU</span>
+            </div>
+          </div>
+
+          {/* Right person — "NATIVEWIT" with laptop */}
+          <div style={{
+            position: "absolute", right: 80, bottom: 60,
+            opacity: interpolate(frame, [305, 323], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            transform: `translateX(${interpolate(frame, [305, 323], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
+          }}>
+            <svg width="100" height="150" viewBox="0 0 100 150">
+              {/* Head */}
+              <circle cx="50" cy="25" r="18" fill={theme.colors.accent} opacity="0.5" />
+              <circle cx="56" cy="22" r="2" fill={theme.colors.bg} opacity="0.7" />
+              <path d="M42 30 Q50 35 58 30" fill="none" stroke={theme.colors.bg} strokeWidth="1.5" opacity="0.5" />
+              {/* Body */}
+              <rect x="35" y="43" width="30" height="45" rx="6" fill={theme.colors.accent} opacity="0.25" />
+              {/* Arms reaching to desk */}
+              <line x1="35" y1="55" x2="15" y2="75" stroke={theme.colors.accent} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              <line x1="65" y1="55" x2="85" y2="75" stroke={theme.colors.accent} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              {/* Laptop */}
+              <rect x="45" y="78" width="45" height="28" rx="3" fill={theme.colors.surface} stroke={theme.colors.accent} strokeWidth="1.5" opacity="0.6" />
+              <rect x="42" y="106" width="50" height="4" rx="2" fill={theme.colors.accent} opacity="0.3" />
+              {/* Legs */}
+              <line x1="42" y1="88" x2="35" y2="120" stroke={theme.colors.accent} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+              <line x1="58" y1="88" x2="65" y2="120" stroke={theme.colors.accent} strokeWidth="3" opacity="0.3" strokeLinecap="round" />
+            </svg>
+            <div style={{ textAlign: "center", marginTop: 4 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: theme.colors.accent, letterSpacing: 3, textTransform: "uppercase" }}>NATIVEWIT</span>
+            </div>
+          </div>
+
+          {/* Chat bubbles between them */}
+          {[
+            { text: "What if we...", side: "left", delay: 325 },
+            { text: "Yes! And also...", side: "right", delay: 345 },
+            { text: "Let's ship it ✓", side: "left", delay: 365 },
+          ].map((bubble, i) => {
+            const bP = interpolate(frame, [bubble.delay, bubble.delay + 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const bFade = interpolate(frame, [bubble.delay + 40, bubble.delay + 55], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+            const isLeft = bubble.side === "left";
+            return (
+              <div key={i} style={{
+                position: "absolute", top: 40 + i * 50, left: isLeft ? 220 : 430,
+                padding: "8px 16px", borderRadius: 12, background: isLeft ? `${theme.colors.textSecondary}22` : `${theme.colors.accent}22`,
+                border: `1.5px solid ${isLeft ? theme.colors.textSecondary : theme.colors.accent}44`,
+                opacity: bP * bFade, transform: `scale(${interpolate(bP, [0, 1], [0.8, 1])}) translateY(${-6 * bP}px)`,
+              }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: isLeft ? theme.colors.textSecondary : theme.colors.accent, letterSpacing: 0.5 }}>{bubble.text}</span>
+              </div>
+            );
+          })}
+
+          {/* "Same team" connecting arc */}
+          <svg width="800" height="400" viewBox="0 0 800 400" style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}>
+            <path d="M200 340 Q400 380 600 340" fill="none" stroke={theme.colors.accent} strokeWidth="1.5" opacity={interpolate(frame, [330, 350], [0, 0.3], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} strokeDasharray="8 4" />
+          </svg>
         </div>
 
         {/* Question marks → Checkmarks */}
@@ -302,6 +497,10 @@ export const Differentiator: React.FC = () => {
           const aiBadge = interpolate(frame - (layerDelay + 15), [0, 15], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           const scanT = ((frame - layerDelay + i * 20) % 80) / 80;
 
+          /* Mini person animation cycle per layer */
+          const personWalk = Math.sin((frame + i * 30) * 0.08) * 4;
+          const armSwing = Math.sin((frame + i * 20) * 0.15) * 6;
+
           return (
             <div key={layer.label} style={{
               width: 700, height: 80, borderRadius: 16, background: theme.colors.surface,
@@ -342,6 +541,40 @@ export const Differentiator: React.FC = () => {
                 </div>
                 <span style={{ fontSize: 22, fontWeight: 800, color: theme.colors.textSecondary, letterSpacing: 3 }}>{layer.label}</span>
               </div>
+
+              {/* Mini people working on this layer */}
+              <div style={{ display: "flex", alignItems: "center", gap: 24, position: "absolute", left: 250 }}>
+                {/* Person 1 — typing/working */}
+                <svg width="30" height="40" viewBox="0 0 30 40" opacity={aiBadge * 0.6}>
+                  <circle cx="15" cy="6" r="5" fill={layer.color} opacity="0.5" />
+                  <line x1="15" y1="11" x2="15" y2="24" stroke={layer.color} strokeWidth="1.5" opacity="0.4" />
+                  <line x1="15" y1="16" x2={9 + armSwing} y2="22" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="16" x2={21 - armSwing} y2="22" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="24" x2="11" y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="24" x2="19" y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                </svg>
+                {/* Person 2 — carrying block */}
+                <svg width="30" height="40" viewBox="0 0 30 40" opacity={aiBadge * 0.5}
+                  style={{ transform: `translateX(${personWalk}px)` }}>
+                  <circle cx="15" cy="6" r="5" fill={layer.color} opacity="0.5" />
+                  <line x1="15" y1="11" x2="15" y2="24" stroke={layer.color} strokeWidth="1.5" opacity="0.4" />
+                  <line x1="15" y1="15" x2="8" y2="10" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="15" x2="22" y2="10" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <rect x="6" y="3" width="18" height="8" rx="2" fill={layer.color} opacity="0.2" />
+                  <line x1="15" y1="24" x2={11 + Math.sin((frame + i * 10) * 0.12) * 2} y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="24" x2={19 - Math.sin((frame + i * 10) * 0.12) * 2} y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                </svg>
+                {/* Person 3 — waving/pointing */}
+                <svg width="30" height="40" viewBox="0 0 30 40" opacity={aiBadge * 0.45}>
+                  <circle cx="15" cy="6" r="5" fill={layer.color} opacity="0.5" />
+                  <line x1="15" y1="11" x2="15" y2="24" stroke={layer.color} strokeWidth="1.5" opacity="0.4" />
+                  <line x1="15" y1="16" x2={8 + Math.sin((frame + i * 15) * 0.1) * 5} y2={12 - Math.abs(Math.sin((frame + i * 15) * 0.1)) * 4} stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="16" x2="22" y2="20" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="24" x2="11" y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                  <line x1="15" y1="24" x2="19" y2="34" stroke={layer.color} strokeWidth="1.2" opacity="0.4" />
+                </svg>
+              </div>
+
               <div style={{ display: "flex", alignItems: "center", gap: 12, opacity: aiBadge }}>
                 <svg width="28" height="28" viewBox="0 0 28 28" style={{ transform: `scale(${1 + Math.sin((frame + i * 20) * 0.1) * 0.08})` }}>
                   <circle cx="4" cy="8" r="2.5" fill={layer.color} opacity="0.6" />

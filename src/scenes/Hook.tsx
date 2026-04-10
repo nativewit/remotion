@@ -142,43 +142,67 @@ export const Hook: React.FC = () => {
         }} />
       )}
 
-      {/* ── "Great product" infographic ──────────────────── */}
+      {/* ── "That's NOT what great products need" — cross/wrong infographic ── */}
       {infoReveal > 0 && (
         <div style={{
-          position: "absolute", top: "50%", right: "12%",
+          position: "absolute", top: "50%", right: "10%",
           transform: "translateY(-50%)", opacity: infoReveal,
-          display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 24,
+          display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 20,
         }}>
           <span style={{
-            fontSize: 34, fontWeight: 900, color: theme.colors.accent,
+            fontSize: 32, fontWeight: 900, color: theme.colors.accent,
             letterSpacing: 3, textTransform: "uppercase",
-          }}>Great products need</span>
+          }}>That's not enough</span>
           {[
-            { icon: "💡", label: "Vision & Strategy", delay: 0 },
-            { icon: "🎯", label: "User-Centered Design", delay: 6 },
-            { icon: "⚡", label: "Technical Excellence", delay: 12 },
-            { icon: "🔄", label: "Rapid Iteration", delay: 18 },
+            { label: "Just following specs", delay: 0 },
+            { label: "No product thinking", delay: 6 },
+            { label: "Copy-paste architecture", delay: 12 },
+            { label: "Ship & forget", delay: 18 },
           ].map((item, i) => {
-            const p = interpolate(frame - 100 - item.delay, [0, 15], [0, 1], {
+            const p = interpolate(frame - 95 - item.delay, [0, 15], [0, 1], {
               extrapolateLeft: "clamp", extrapolateRight: "clamp",
               easing: Easing.bezier(0.19, 1, 0.22, 1),
+            });
+            const crossP = interpolate(frame - 100 - item.delay, [0, 12], [0, 1], {
+              extrapolateLeft: "clamp", extrapolateRight: "clamp",
             });
             return (
               <div key={i} style={{
                 display: "flex", alignItems: "center", gap: 16,
                 opacity: p, transform: `translateX(${interpolate(p, [0, 1], [30, 0])}px)`,
               }}>
+                {/* Cross/wrong icon */}
                 <div style={{
                   width: 48, height: 48, borderRadius: 12,
-                  background: `${theme.colors.accent}18`, border: `2px solid ${theme.colors.accent}44`,
-                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
-                }}>{item.icon}</div>
+                  background: `${theme.colors.accent}15`, border: `2px solid ${theme.colors.accent}55`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  position: "relative",
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 26 26">
+                    <line x1="6" y1="6" x2="20" y2="20" stroke={theme.colors.accent} strokeWidth="3" strokeLinecap="round"
+                      strokeDasharray="20" strokeDashoffset={20 - crossP * 20} />
+                    <line x1="20" y1="6" x2="6" y2="20" stroke={theme.colors.accent} strokeWidth="3" strokeLinecap="round"
+                      strokeDasharray="20" strokeDashoffset={20 - crossP * 20} />
+                  </svg>
+                </div>
                 <span style={{
                   fontSize: 24, fontWeight: 700, color: theme.colors.textSecondary, letterSpacing: 1,
+                  textDecoration: crossP > 0.8 ? "line-through" : "none",
+                  textDecorationColor: theme.colors.accent,
                 }}>{item.label}</span>
               </div>
             );
           })}
+          {/* Big ✗ watermark */}
+          <svg width="180" height="180" viewBox="0 0 180 180" style={{
+            position: "absolute", top: "50%", left: "50%",
+            transform: `translate(-50%, -50%) rotate(${interpolate(frame, [110, 130], [-20, -12], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}deg) scale(${interpolate(frame, [110, 125], [0.3, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`,
+            opacity: interpolate(frame, [110, 125], [0, 0.12], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            pointerEvents: "none",
+          }}>
+            <line x1="20" y1="20" x2="160" y2="160" stroke={theme.colors.accent} strokeWidth="12" strokeLinecap="round" />
+            <line x1="160" y1="20" x2="20" y2="160" stroke={theme.colors.accent} strokeWidth="12" strokeLinecap="round" />
+          </svg>
         </div>
       )}
 

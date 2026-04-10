@@ -132,73 +132,89 @@ export const Authority: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Device Mockups (appear right when brand shifts left) ─── */}
+      {/* ── Device Mockups (appear right when brand shifts left) — stacked vertically ─── */}
       {phoneMockProgress > 0.01 && (
         <div style={{
-          position: "absolute", top: "22%", right: "12%",
-          display: "flex", alignItems: "flex-end", gap: 30,
+          position: "absolute", top: "12%", right: "10%",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 28,
         }}>
-          {/* Mobile phone mockup */}
+          {/* Mobile phone mockup — BIG */}
           <div style={{
-            opacity: phoneMockProgress, transform: `scale(${interpolate(phoneMockProgress, [0, 1], [0.6, 1])}) translateY(${breatheY}px)`,
+            opacity: phoneMockProgress, transform: `scale(${interpolate(phoneMockProgress, [0, 1], [0.5, 1])}) translateY(${breatheY}px)`,
           }}>
             <div style={{
-              width: 120, height: 220, borderRadius: 18, border: `3px solid ${theme.colors.accent}66`,
+              width: 180, height: 320, borderRadius: 24, border: `3px solid ${theme.colors.accent}66`,
               background: theme.colors.surface, position: "relative", overflow: "hidden",
-              boxShadow: `0 12px 40px rgba(0,0,0,0.4)`,
+              boxShadow: `0 16px 50px rgba(0,0,0,0.5)`,
             }}>
-              <div style={{ height: 18, background: theme.colors.accent, opacity: 0.7 }} />
-              {/* Content lines */}
-              {[0.6, 0.8, 0.5, 0.7].map((w, j) => (
-                <div key={j} style={{ margin: `${6 + j}px 8px 0`, height: 5, width: `${w * 100}%`, background: theme.colors.border, borderRadius: 3 }} />
+              <div style={{ height: 22, background: theme.colors.accent, opacity: 0.7 }} />
+              {/* Content skeleton */}
+              {[0.6, 0.8, 0.5, 0.7, 0.4].map((w, j) => (
+                <div key={j} style={{ margin: `${7 + j}px 12px 0`, height: 6, width: `${w * 100}%`, background: theme.colors.border, borderRadius: 3 }} />
               ))}
-              {/* Count inside phone */}
+              <div style={{ margin: "10px 12px", height: 50, borderRadius: 8, background: `linear-gradient(135deg, ${theme.colors.accent}18, ${theme.colors.accent}08)` }} />
+              {/* Countdown inside phone */}
               <div style={{
-                position: "absolute", bottom: 28, left: 0, right: 0,
-                textAlign: "center", fontSize: 28, fontWeight: 900, color: theme.colors.accent, opacity: 0.8,
-              }}>{phoneCount}+</div>
+                position: "absolute", bottom: 50, left: 0, right: 0, textAlign: "center",
+              }}>
+                <div style={{ fontSize: 52, fontWeight: 900, color: theme.colors.accent, lineHeight: 1 }}>{phoneCount}+</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>Mobile Apps</div>
+              </div>
+              {/* Years badge */}
               <div style={{
-                position: "absolute", bottom: 12, left: 0, right: 0,
-                textAlign: "center", fontSize: 9, fontWeight: 800, color: theme.colors.textMuted,
-                letterSpacing: 1.5, textTransform: "uppercase",
-              }}>Mobile Apps</div>
+                position: "absolute", top: 30, right: 8, padding: "4px 10px", borderRadius: 8,
+                background: `${theme.colors.accent}33`, border: `1px solid ${theme.colors.accent}55`,
+                opacity: yearsOpacity,
+              }}>
+                <span style={{ fontSize: 16, fontWeight: 900, color: theme.colors.accent }}>{yearsCount}+ yrs</span>
+              </div>
             </div>
-            <div style={{ textAlign: "center", marginTop: 10, fontSize: 16, fontWeight: 800, color: theme.colors.accent, letterSpacing: 2, textTransform: "uppercase" }}>
+            <div style={{ textAlign: "center", marginTop: 10, fontSize: 18, fontWeight: 800, color: theme.colors.accent, letterSpacing: 3, textTransform: "uppercase" }}>
               MOBILE
             </div>
           </div>
 
-          {/* Desktop mockup */}
+          {/* Desktop mockup — BIG, below */}
           <div style={{
-            opacity: desktopMockProgress, transform: `scale(${interpolate(desktopMockProgress, [0, 1], [0.6, 1])}) translateY(${-breatheY}px)`,
+            opacity: desktopMockProgress, transform: `scale(${interpolate(desktopMockProgress, [0, 1], [0.5, 1])}) translateY(${-breatheY}px)`,
           }}>
             <div style={{
-              width: 200, height: 140, borderRadius: 10, border: `3px solid ${theme.colors.blue}66`,
+              width: 300, height: 200, borderRadius: 14, border: `3px solid ${theme.colors.blue}66`,
               background: theme.colors.surface, position: "relative", overflow: "hidden",
-              boxShadow: `0 12px 40px rgba(0,0,0,0.4)`,
+              boxShadow: `0 16px 50px rgba(0,0,0,0.5)`,
             }}>
-              <div style={{ height: 14, background: theme.colors.surfaceLight, display: "flex", alignItems: "center", padding: "0 6px", gap: 3 }}>
+              <div style={{ height: 18, background: theme.colors.surfaceLight, display: "flex", alignItems: "center", padding: "0 8px", gap: 4 }}>
                 {[0, 1, 2].map((d) => (
-                  <div key={d} style={{ width: 5, height: 5, borderRadius: "50%", background: d === 0 ? theme.colors.accent : theme.colors.textMuted, opacity: 0.5 }} />
+                  <div key={d} style={{ width: 6, height: 6, borderRadius: "50%", background: d === 0 ? theme.colors.accent : theme.colors.textMuted, opacity: 0.5 }} />
                 ))}
               </div>
-              {[0.7, 0.5, 0.8].map((w, j) => (
-                <div key={j} style={{ margin: `5px 8px 0`, height: 5, width: `${w * 100}%`, background: theme.colors.border, borderRadius: 3 }} />
-              ))}
-              {/* Count inside desktop */}
+              <div style={{ display: "flex", height: "calc(100% - 18px)" }}>
+                <div style={{ width: 55, background: theme.colors.surfaceLight, opacity: 0.4 }} />
+                <div style={{ flex: 1, padding: 10 }}>
+                  {[0.7, 0.5, 0.8, 0.4].map((w, j) => (
+                    <div key={j} style={{ height: 6, width: `${w * 100}%`, background: theme.colors.border, borderRadius: 3, marginTop: 7 }} />
+                  ))}
+                </div>
+              </div>
+              {/* Countdown inside desktop */}
               <div style={{
-                position: "absolute", bottom: 22, left: 0, right: 0,
-                textAlign: "center", fontSize: 24, fontWeight: 900, color: theme.colors.blue, opacity: 0.8,
-              }}>{desktopCount}+</div>
+                position: "absolute", bottom: 22, left: 0, right: 0, textAlign: "center",
+              }}>
+                <div style={{ fontSize: 40, fontWeight: 900, color: theme.colors.blue, lineHeight: 1 }}>{desktopCount}+</div>
+                <div style={{ fontSize: 12, fontWeight: 800, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase", marginTop: 3 }}>Web Apps</div>
+              </div>
+              {/* Products badge */}
               <div style={{
-                position: "absolute", bottom: 8, left: 0, right: 0,
-                textAlign: "center", fontSize: 9, fontWeight: 800, color: theme.colors.textMuted,
-                letterSpacing: 1.5, textTransform: "uppercase",
-              }}>Web Apps</div>
+                position: "absolute", top: 24, right: 10, padding: "4px 10px", borderRadius: 8,
+                background: `${theme.colors.blue}33`, border: `1px solid ${theme.colors.blue}55`,
+                opacity: productsOpacity,
+              }}>
+                <span style={{ fontSize: 14, fontWeight: 900, color: theme.colors.blue }}>{productsCount}+ shipped</span>
+              </div>
             </div>
             {/* Desktop stand */}
-            <div style={{ width: 60, height: 20, margin: "0 auto", borderLeft: `2px solid ${theme.colors.border}`, borderRight: `2px solid ${theme.colors.border}`, borderBottom: `2px solid ${theme.colors.border}`, borderRadius: "0 0 8px 8px" }} />
-            <div style={{ textAlign: "center", marginTop: 6, fontSize: 16, fontWeight: 800, color: theme.colors.blue, letterSpacing: 2, textTransform: "uppercase" }}>
+            <div style={{ width: 70, height: 22, margin: "0 auto", borderLeft: `2px solid ${theme.colors.border}`, borderRight: `2px solid ${theme.colors.border}`, borderBottom: `2px solid ${theme.colors.border}`, borderRadius: "0 0 8px 8px" }} />
+            <div style={{ textAlign: "center", marginTop: 6, fontSize: 18, fontWeight: 800, color: theme.colors.blue, letterSpacing: 3, textTransform: "uppercase" }}>
               WEB
             </div>
           </div>
