@@ -1,9 +1,15 @@
 import { Composition } from "remotion";
+import { loadFont } from "@remotion/google-fonts/Nunito";
 import {
   NativewitIntro,
   TOTAL_DURATION,
   SCENE_DURATIONS,
 } from "./compositions/NativewitIntro";
+
+loadFont("normal", {
+  weights: ["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
 import { Hook } from "./scenes/Hook";
 import { Problem } from "./scenes/Problem";
 import { Authority } from "./scenes/Authority";

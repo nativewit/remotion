@@ -11,15 +11,18 @@ import { CTA } from "../scenes/CTA";
  *
  *   Scene              Frames   Seconds   VO span
  *   ────────────────   ──────   ───────   ────────
- *   Hook                 150       5.0   00:00–00:05
- *   Problem              345      11.5   00:05–00:16.5
- *   Authority            390      13.0   00:16.5–00:29.5
- *   Proof                435      14.5   00:29.5–00:44
- *   Differentiator       645      21.5   00:44–01:05.5
- *   CTA                  375      12.5   01:05.5–01:18
+ *   Intro delay          30       1.0   silence / anticipation
+ *   Hook                 150       5.0   00:01–00:06
+ *   Problem              345      11.5   00:06–00:17.5
+ *   Authority            390      13.0   00:17.5–00:30.5
+ *   Proof                435      14.5   00:30.5–00:45
+ *   Differentiator       645      21.5   00:45–01:06.5
+ *   CTA                  375      12.5   01:06.5–01:19
  *                       ────     ─────
- *   Total               2340      78.0   (~1:18)
+ *   Total               2370      79.0   (~1:19)
  */
+export const INTRO_DELAY = 30; // 1 s at 30 fps
+
 export const SCENE_DURATIONS = {
   hook: 150,
   problem: 345,
@@ -29,13 +32,12 @@ export const SCENE_DURATIONS = {
   cta: 375,
 } as const;
 
-export const TOTAL_DURATION = Object.values(SCENE_DURATIONS).reduce(
-  (sum, d) => sum + d,
-  0,
-);
+export const TOTAL_DURATION =
+  INTRO_DELAY +
+  Object.values(SCENE_DURATIONS).reduce((sum, d) => sum + d, 0);
 
 export const NativewitIntro: React.FC = () => {
-  let offset = 0;
+  let offset = INTRO_DELAY;
   const seq = (duration: number) => {
     const from = offset;
     offset += duration;
@@ -51,11 +53,15 @@ export const NativewitIntro: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>
-      {/* Voiceover */}
-      <Audio src={staticFile("voiceover.mp3")} />
+      {/* Voiceover — delayed to sync with first visual scene */}
+      <Sequence from={INTRO_DELAY}>
+        <Audio src={staticFile("voiceover.mp3")} />
+      </Sequence>
 
-      {/* Background music — low volume under VO */}
-      <Audio src={staticFile("music.mp3")} volume={0.15} />
+      {/* Background music — starts at timeline second 1 */}
+      <Sequence from={30}>
+        <Audio src={staticFile("music.mp3")} volume={0.15} />
+      </Sequence>
 
       <Sequence from={hookFrom} durationInFrames={SCENE_DURATIONS.hook}>
         <Hook />
