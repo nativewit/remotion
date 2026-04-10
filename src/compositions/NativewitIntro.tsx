@@ -58,10 +58,8 @@ export const NativewitIntro: React.FC = () => {
         <Audio src={staticFile("voiceover.mp3")} />
       </Sequence>
 
-      {/* Background music — starts at timeline second 1 */}
-      <Sequence from={30}>
-        <Audio src={staticFile("music.mp3")} volume={0.15} />
-      </Sequence>
+      {/* Background music — starts from the beginning */}
+      <Audio src={staticFile("music.mov")} volume={0.15} />
 
       <Sequence from={hookFrom} durationInFrames={SCENE_DURATIONS.hook}>
         <Hook />
