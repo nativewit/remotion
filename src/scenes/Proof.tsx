@@ -37,7 +37,7 @@ export const Proof: React.FC = () => {
   const cat2 = interpolate(frame, [121, 135, 213, 225], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const cat3 = interpolate(frame, [228, 240, 290, 300], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  const phase2 = interpolate(frame, [298, 308, 308, 320], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const phase2 = interpolate(frame, [298, 308, 315, 320], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const phase3 = interpolate(frame, [307, 321, 452, 468], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const breathe = Math.sin(frame * Math.PI / 30);
