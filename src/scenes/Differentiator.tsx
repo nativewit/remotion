@@ -360,7 +360,7 @@ export const Differentiator: React.FC = () => {
         {/* ── Title ── */}
         <div style={{
           position: "absolute", top: 50,
-          opacity: interpolate(frame, [225, 238], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+          opacity: interpolate(frame, [225, 238, 320, 332], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           transform: `translateY(${interpolate(frame, [225, 238], [15, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
         }}>
           <span style={{ fontSize: 44, fontWeight: 900, color: theme.colors.textSecondary, letterSpacing: 4, textTransform: "uppercase" }}>
@@ -392,53 +392,60 @@ export const Differentiator: React.FC = () => {
             <span style={{ fontSize: 16, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 2 }}>VS</span>
           </div>
 
-          {/* ── LEFT: Contractor (dimmed) ── */}
+          {/* ── LEFT: Contractor ── */}
           <div style={{
             width: "48%", display: "flex", flexDirection: "column", alignItems: "center", gap: 22, paddingTop: 20,
-            opacity: interpolate(frame, [234, 250], [0, 0.6], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            opacity: interpolate(frame, [234, 250], [0, 0.88], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
-            <span style={{ fontSize: 26, fontWeight: 900, color: theme.colors.textMuted, letterSpacing: 5, textTransform: "uppercase" }}>CONTRACTOR</span>
+            <span style={{ fontSize: 26, fontWeight: 900, color: "rgba(255,255,255,0.85)", letterSpacing: 5, textTransform: "uppercase" }}>CONTRACTOR</span>
 
-            {/* Isolated person icon */}
+            {/* Person icon */}
             <svg width="80" height="90" viewBox="0 0 60 70" style={{
-              opacity: interpolate(frame, [235, 250], [0, 0.4], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+              opacity: interpolate(frame, [235, 250], [0, 0.85], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             }}>
-              <rect x="5" y="5" width="50" height="60" rx="8" fill={theme.colors.textMuted} opacity="0.06" stroke={theme.colors.textMuted} strokeWidth="1" strokeDasharray="4 3" />
-              <circle cx="30" cy="22" r="9" fill={theme.colors.textMuted} opacity="0.3" />
-              <rect x="21" y="32" width="18" height="24" rx="4" fill={theme.colors.textMuted} opacity="0.2" />
-              <path d="M30 58 L30 66" stroke={theme.colors.textMuted} strokeWidth="2" opacity="0.3" strokeLinecap="round" />
-              <path d="M26 63 L30 67 L34 63" fill="none" stroke={theme.colors.textMuted} strokeWidth="1.5" opacity="0.3" strokeLinecap="round" />
+              <rect x="5" y="5" width="50" height="60" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3" />
+              <circle cx="30" cy="22" r="9" fill="rgba(255,255,255,0.7)" />
+              <rect x="21" y="32" width="18" height="24" rx="4" fill="rgba(255,255,255,0.5)" />
+              <line x1="30" y1="56" x2="24" y2="68" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" />
+              <line x1="30" y1="56" x2="36" y2="68" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" />
             </svg>
 
             {/* Comparison items */}
             {[
-              { text: "Takes orders", icon: "M4 6h16M4 10h16M4 14h10" },
-              { text: "Ships code", icon: "M20 12V7a2 2 0 00-2-2H6a2 2 0 00-2 2v5m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4" },
-              { text: "Exits at launch", icon: "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" },
+              { text: "Takes orders" },
+              { text: "Ships code" },
+              { text: "Exits at launch" },
             ].map((item, i) => {
               const rowDelay = 252 + i * 14;
               const rowP = interpolate(frame, [rowDelay, rowDelay + 16], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
               return (
                 <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 14, opacity: rowP * 0.5,
+                  display: "flex", alignItems: "center", gap: 14, opacity: rowP,
                   transform: `translateX(${interpolate(rowP, [0, 1], [-15, 0])}px)`,
                 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={theme.colors.textMuted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity={0.4}>
-                    <path d={item.icon} />
-                  </svg>
-                  <span style={{ fontSize: 21, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 1 }}>{item.text}</span>
+                  {/* Red X badge */}
+                  <div style={{ width: 22, height: 22, position: "relative", flexShrink: 0 }}>
+                    <svg width="22" height="22" viewBox="0 0 22 22">
+                      <circle cx="11" cy="11" r="10" fill={theme.colors.accent} opacity="0.2" />
+                      <line x1="7" y1="7" x2="15" y2="15" stroke={theme.colors.accent} strokeWidth="2.5" strokeLinecap="round" />
+                      <line x1="15" y1="7" x2="7" y2="15" stroke={theme.colors.accent} strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <span style={{ fontSize: 21, fontWeight: 700, color: "rgba(255,255,255,0.85)", letterSpacing: 1 }}>{item.text}</span>
                 </div>
               );
             })}
 
-            {/* Strike-through */}
-            <div style={{
-              position: "absolute", top: "50%", left: "5%",
-              width: `${interpolate(frame, [295, 312], [0, 42], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}%`,
-              height: 3, borderRadius: 2,
-              background: `linear-gradient(90deg, ${theme.colors.accent}99, ${theme.colors.accent}44)`,
-              transform: "rotate(-10deg)",
-            }} />
+            {/* Red X overlay — drawn on reveal */}
+            <svg style={{
+              position: "absolute", top: "8%", left: "2%", width: "46%", height: "84%", pointerEvents: "none",
+              opacity: interpolate(frame, [295, 308], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            }} viewBox="0 0 200 360" preserveAspectRatio="none">
+              <line x1="10" y1="10" x2="190" y2="350" stroke={theme.colors.accent} strokeWidth="3" opacity="0.7"
+                strokeDasharray="360" strokeDashoffset={interpolate(frame, [295, 310], [360, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+              <line x1="190" y1="10" x2="10" y2="350" stroke={theme.colors.accent} strokeWidth="3" opacity="0.7"
+                strokeDasharray="360" strokeDashoffset={interpolate(frame, [302, 317], [360, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+            </svg>
           </div>
 
           {/* ── RIGHT: Co-founder (highlighted) ── */}
@@ -576,8 +583,8 @@ export const Differentiator: React.FC = () => {
 
           {/* Subtitle */}
           <div style={{
-            opacity: interpolate(frame, [415, 428], [0, 0.55], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
-            transform: `translateY(${interpolate(frame, [415, 428], [8, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
+            opacity: interpolate(frame, [358, 370], [0, 0.55], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+            transform: `translateY(${interpolate(frame, [358, 370], [8, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}px)`,
           }}>
             <span style={{ fontSize: 22, fontWeight: 700, color: theme.colors.textMuted, letterSpacing: 2, textTransform: "uppercase" }}>
               So you don't build the wrong thing fast

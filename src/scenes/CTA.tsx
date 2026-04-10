@@ -33,12 +33,12 @@ export const CTA: React.FC = () => {
   });
   const logoScale = interpolate(logoProgress, [0, 1], [0.85, 1]);
 
-  /* ── Phase 1: "Building something that matters" (f13-75) ─ */
-  const buildReveal = interpolate(frame, [13, 35], [0, 1], {
+  /* ── Phase 1: "Building something that matters" (f15-77) ─ */
+  const buildReveal = interpolate(frame, [15, 37], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const buildFade = interpolate(frame, [68, 82], [1, 0], {
+  const buildFade = interpolate(frame, [70, 84], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -200,7 +200,7 @@ export const CTA: React.FC = () => {
           {/* Abstract assembling structure */}
           <div style={{ display: "flex", alignItems: "flex-end", gap: 6 }}>
             {[0, 1, 2, 3, 4].map((i) => {
-              const blockDelay = 13 + i * 8;
+              const blockDelay = 15 + i * 8;
               const blockProgress = spring({
                 frame: frame - blockDelay,
                 fps,
