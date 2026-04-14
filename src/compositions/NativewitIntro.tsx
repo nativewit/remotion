@@ -53,7 +53,7 @@ export const NativewitIntro: React.FC = () => {
   const ctaFrom = seq(SCENE_DURATIONS.cta);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>
+    <AbsoluteFill style={{ backgroundColor: "#ffffff" }}>
       {/* Voiceover — delayed to sync with first visual scene */}
       <Sequence from={INTRO_DELAY}>
         <Audio src={staticFile("voiceover.mp3")} />

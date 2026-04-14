@@ -397,17 +397,17 @@ export const Differentiator: React.FC = () => {
             width: "48%", display: "flex", flexDirection: "column", alignItems: "center", gap: 22, paddingTop: 20,
             opacity: interpolate(frame, [234, 250], [0, 0.88], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
           }}>
-            <span style={{ fontSize: 26, fontWeight: 900, color: "rgba(255,255,255,0.85)", letterSpacing: 5, textTransform: "uppercase" }}>CONTRACTOR</span>
+            <span style={{ fontSize: 26, fontWeight: 900, color: theme.colors.textSecondary, letterSpacing: 5, textTransform: "uppercase" }}>CONTRACTOR</span>
 
             {/* Person icon */}
             <svg width="80" height="90" viewBox="0 0 60 70" style={{
               opacity: interpolate(frame, [235, 250], [0, 0.85], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
             }}>
-              <rect x="5" y="5" width="50" height="60" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3" />
-              <circle cx="30" cy="22" r="9" fill="rgba(255,255,255,0.7)" />
-              <rect x="21" y="32" width="18" height="24" rx="4" fill="rgba(255,255,255,0.5)" />
-              <line x1="30" y1="56" x2="24" y2="68" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" />
-              <line x1="30" y1="56" x2="36" y2="68" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" />
+              <rect x="5" y="5" width="50" height="60" rx="8" fill={theme.colors.border} stroke={theme.colors.textMuted} strokeWidth="1" strokeDasharray="4 3" />
+              <circle cx="30" cy="22" r="9" fill={theme.colors.textMuted} />
+              <rect x="21" y="32" width="18" height="24" rx="4" fill={theme.colors.textSecondary} />
+              <line x1="30" y1="56" x2="24" y2="68" stroke={theme.colors.textSecondary} strokeWidth="2" strokeLinecap="round" />
+              <line x1="30" y1="56" x2="36" y2="68" stroke={theme.colors.textSecondary} strokeWidth="2" strokeLinecap="round" />
             </svg>
 
             {/* Comparison items */}
@@ -431,7 +431,7 @@ export const Differentiator: React.FC = () => {
                       <line x1="15" y1="7" x2="7" y2="15" stroke={theme.colors.accent} strokeWidth="2.5" strokeLinecap="round" />
                     </svg>
                   </div>
-                  <span style={{ fontSize: 21, fontWeight: 700, color: "rgba(255,255,255,0.85)", letterSpacing: 1 }}>{item.text}</span>
+                  <span style={{ fontSize: 21, fontWeight: 700, color: theme.colors.textPrimary, letterSpacing: 1 }}>{item.text}</span>
                 </div>
               );
             })}

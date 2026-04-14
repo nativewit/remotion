@@ -27,7 +27,7 @@ export const GeometricBg: React.FC<{ frame: number; opacity?: number }> = ({
           y1={0}
           x2={i * 213}
           y2={1080}
-          stroke="#ffffff"
+          stroke="#000000"
           strokeWidth={0.5}
           opacity={opacity * 0.5}
         />
@@ -39,7 +39,7 @@ export const GeometricBg: React.FC<{ frame: number; opacity?: number }> = ({
           y1={i * 216}
           x2={1920}
           y2={i * 216}
-          stroke="#ffffff"
+          stroke="#000000"
           strokeWidth={0.5}
           opacity={opacity * 0.5}
         />
@@ -58,12 +58,12 @@ export const GeometricBg: React.FC<{ frame: number; opacity?: number }> = ({
         strokeDasharray="40 20"
       />
 
-      {/* Rotating White Ring */}
+      {/* Rotating Dark Ring */}
       <circle
         cx={960}
         cy={540}
         r={600}
-        stroke="#ffffff"
+        stroke="#333333"
         strokeWidth={0.4}
         fill="none"
         opacity={opacity * 0.4}
